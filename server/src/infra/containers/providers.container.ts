@@ -1,3 +1,4 @@
+import { DateProvider, IDateProvider } from "src/providers/date";
 import { IMaskProvider, MaskProvider } from "src/providers/mask";
 import {
   IUniqueIdentifierProvider,
@@ -11,3 +12,5 @@ container
   .to(UniqueIdentifierProvider);
 
 container.bind<IMaskProvider>("MaskProvider").to(MaskProvider);
+
+container.bind<IDateProvider>("DateProvider").to(DateProvider);
