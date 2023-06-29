@@ -6,3 +6,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Patient {
+  id        String   @id @db.Uuid
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(100)
+  birthDate DateTime @db.Date
+
+  @@map("patient")
+}
