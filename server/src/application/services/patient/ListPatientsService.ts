@@ -4,10 +4,13 @@ import { IPatientRepository } from "@database/repositories/patient";
 import { transaction } from "@database/transaction";
 import { ListPatientsRequestModel } from "@dtos/patient/ListPatientsRequestModel";
 import { ListPatientsResponseModel } from "@dtos/patient/ListPatientsResponseModel";
+import { AppError } from "@handlers/error/AppError";
 import { pagination } from "@helpers/pagination";
+import { getMessage } from "@helpers/translatedMessagesControl";
 import { IPaginationResponse } from "@http/models/IPaginationResponse";
 import { IDateProvider } from "@providers/date";
 import { IMaskProvider } from "@providers/mask";
+import { IValidatorsProvider } from "@providers/validators";
 
 @injectable()
 class ListPatientsService {
@@ -17,18 +20,29 @@ class ListPatientsService {
     @inject("MaskProvider")
     private maskProvider: IMaskProvider,
     @inject("DateProvider")
-    private dateProvider: IDateProvider
+    private dateProvider: IDateProvider,
+    @inject("ValidatorsProvider")
+    private validatorsProvider: IValidatorsProvider
   ) {}
 
   public async execute({
     page,
     size,
+    filters: rawFilters,
   }: ListPatientsRequestModel): Promise<
     IPaginationResponse<ListPatientsResponseModel>
   > {
+    if (rawFilters?.email && !this.validatorsProvider.email(rawFilters.email))
+      throw new AppError("BAD_REQUEST", getMessage("ErrorInvalidEmail"));
+
+    const filters = {
+      name: rawFilters?.name || null,
+      email: rawFilters?.email || null,
+    };
+
     const [totalItems, items] = await transaction([
-      this.patientRepository.count({ filters: null }),
-      this.patientRepository.get({ filters: null }, pagination({ page, size })),
+      this.patientRepository.count({ filters }),
+      this.patientRepository.get({ filters }, pagination({ page, size })),
     ]);
 
     return {

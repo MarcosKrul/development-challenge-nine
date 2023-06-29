@@ -1,6 +1,7 @@
 {
   "ErrorEnvVarNotFound": "Não foi possível completar a operação. Por favor, entre em contato com a equipe de desenvolvimento.",
   "ErrorGenericUnknown": "Ocorreu um erro interno. Por favor, entre em contato com a equipe de desenvolvimento.",
+  "ErrorInvalidEmail": "O e-mail informafo é inválido.",
   "ErrorOnlySupport": "Apenas pessoas credenciadas podem realizar esta operação.",
   "ErrorQueryTypecasting": "Não foi possível realizar a operação com as informações opcionais informadas.",
   "ErrorRouteNotFound": "Não foi possível encontrar o recurso solicitado.",

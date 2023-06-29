@@ -7,4 +7,4 @@ type patientRepositoryGetInput = {
   filters: patientRepositorysearchFilters;
 };
 
-export { patientRepositoryGetInput };
+export { patientRepositoryGetInput, patientRepositorysearchFilters };
