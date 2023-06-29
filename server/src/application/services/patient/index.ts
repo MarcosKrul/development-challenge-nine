@@ -1,4 +1,5 @@
 import { DeletePatientService } from "./DeletePatientService";
 import { ListPatientsService } from "./ListPatientsService";
+import { SavePatientService } from "./SavePatientService";
 
-export { DeletePatientService, ListPatientsService };
+export { SavePatientService, DeletePatientService, ListPatientsService };

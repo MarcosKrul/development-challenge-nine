@@ -2,10 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import {
   DeletePatientService,
   ListPatientsService,
+  SavePatientService,
 } from "src/application/services/patient";
 
 import { container } from "@containers/container";
 import { ListPatientsResponseModel } from "@dtos/patient/ListPatientsResponseModel";
+import { SavePatientResponseModel } from "@dtos/patient/SavePatientResponseModel";
 import { getMessage } from "@helpers/translatedMessagesControl";
 import { IPaginationResponse } from "@http/models/IPaginationResponse";
 import { IResponseMessage } from "@http/models/IResponseMessage";
@@ -57,6 +59,31 @@ class PatientController {
 
     res.status(HttpStatus.OK).json({
       success: true,
+      message: getMessage("SuccessGeneric"),
+    });
+
+    return next();
+  }
+
+  public async save(
+    req: Request,
+    res: Response<IResponseMessage<SavePatientResponseModel>>,
+    next: NextFunction
+  ): Promise<void> {
+    const { name, email, birthDate, address } = req.body;
+
+    const service = container.resolve(SavePatientService);
+
+    const result = await service.execute({
+      email,
+      address,
+      birthDate,
+      name,
+    });
+
+    res.status(HttpStatus.OK).json({
+      success: true,
+      content: result,
       message: getMessage("SuccessGeneric"),
     });
 

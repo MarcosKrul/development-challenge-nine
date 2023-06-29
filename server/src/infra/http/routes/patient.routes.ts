@@ -17,6 +17,13 @@ routes.post(
   controller.list,
   handleUrlPatternMatchMiddleware.setHasUrlMatched()
 );
+routes.post(
+  "/",
+  handleUrlPatternMatchMiddleware.skipIfHasUrlMatched,
+  logMiddleware.routeStart,
+  controller.save,
+  handleUrlPatternMatchMiddleware.setHasUrlMatched()
+);
 routes.delete(
   "/:patient_id",
   handleUrlPatternMatchMiddleware.skipIfHasUrlMatched,
