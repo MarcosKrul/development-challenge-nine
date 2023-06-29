@@ -32,7 +32,7 @@ class DeletePatientService {
 
     const [hasPatient, hasAddress] = await transaction([
       this.patientRepository.getById({ patientId }),
-      this.addressRepository.getByPatienId({ patientId }),
+      this.addressRepository.getByPatientId({ patientId }),
     ]);
 
     if (!hasPatient)

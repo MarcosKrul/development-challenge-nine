@@ -10,6 +10,13 @@ const logMiddleware = new LogMiddleware();
 
 const handleUrlPatternMatchMiddleware = new HandleUrlPatternMatchMiddleware();
 
+routes.get(
+  "/:patient_id",
+  handleUrlPatternMatchMiddleware.skipIfHasUrlMatched,
+  logMiddleware.routeStart,
+  controller.getById,
+  handleUrlPatternMatchMiddleware.setHasUrlMatched()
+);
 routes.post(
   "/search",
   handleUrlPatternMatchMiddleware.skipIfHasUrlMatched,
