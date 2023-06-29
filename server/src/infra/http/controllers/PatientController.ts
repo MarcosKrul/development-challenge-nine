@@ -3,6 +3,7 @@ import {
   DeletePatientService,
   ListPatientsService,
   SavePatientService,
+  UpdatePatientService,
 } from "src/application/services/patient";
 
 import { container } from "@containers/container";
@@ -79,6 +80,33 @@ class PatientController {
       address,
       birthDate,
       name,
+    });
+
+    res.status(HttpStatus.OK).json({
+      success: true,
+      content: result,
+      message: getMessage("SuccessGeneric"),
+    });
+
+    return next();
+  }
+
+  public async update(
+    req: Request,
+    res: Response<IResponseMessage<SavePatientResponseModel>>,
+    next: NextFunction
+  ): Promise<void> {
+    const { patient_id: patientId } = req.params;
+    const { name, email, birthDate, address } = req.body;
+
+    const service = container.resolve(UpdatePatientService);
+
+    const result = await service.execute({
+      email,
+      address,
+      birthDate,
+      name,
+      id: patientId,
     });
 
     res.status(HttpStatus.OK).json({
