@@ -10,6 +10,8 @@ interface IAddressRepository {
   getByPatienId(
     _: addressRepositoryGetByPatientIdInput
   ): PrismaPromise<AddressModel | null>;
+
+  save(_: AddressModel & { patientId: string }): PrismaPromise<AddressModel>;
 }
 
 export { IAddressRepository };

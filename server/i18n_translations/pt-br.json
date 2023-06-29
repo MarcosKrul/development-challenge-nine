@@ -8,6 +8,7 @@
   "ErrorBirthDateFuture": "A data de nascimento é inválida pois é futura.",
   "ErrorBirthDateInvalid": "A data de nascimento informada é inválida.",
   "ErrorBirthDateRequired": "É necessário informar a data de nascimento do paciente.",
+  "ErrorEmailAlreadyExists": "O E-mail informado já existe.",
   "ErrorEmailInvalid": "O E-mail informado é inválido.",
   "ErrorEmailRequired": "É necessário informar o E-mail do paciente.",
   "ErrorEnvVarNotFound": "Não foi possível completar a operação. Por favor, entre em contato com a equipe de desenvolvimento.",

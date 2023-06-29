@@ -23,6 +23,36 @@ class AddressRepository extends BaseRepository implements IAddressRepository {
         patientId,
       },
     });
+
+  save = ({
+    city,
+    complement,
+    district,
+    publicArea,
+    state,
+    zipCode,
+    patientId,
+  }: AddressModel & { patientId: string }): PrismaPromise<AddressModel> =>
+    this.prisma.address.upsert({
+      where: { patientId },
+      create: {
+        city,
+        district,
+        publicArea,
+        state,
+        zipCode,
+        complement,
+        patientId,
+      },
+      update: {
+        city,
+        district,
+        publicArea,
+        state,
+        zipCode,
+        complement,
+      },
+    });
 }
 
 export { AddressRepository };

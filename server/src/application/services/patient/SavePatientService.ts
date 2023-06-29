@@ -1,6 +1,9 @@
 import { inject, injectable } from "inversify";
 
 import { VarcharMaxLength } from "@commons/VarcharMaxLength";
+import { IAddressRepository } from "@database/repositories/address";
+import { IPatientRepository } from "@database/repositories/patient";
+import { transaction } from "@database/transaction";
 import { SavePatientRequestModel } from "@dtos/patient/SavePatientRequestModel";
 import { SavePatientResponseModel } from "@dtos/patient/SavePatientResponseModel";
 import { AppError } from "@handlers/error/AppError";
@@ -11,6 +14,7 @@ import {
 } from "@helpers/translatedMessagesControl";
 import { IDateProvider } from "@providers/date";
 import { IMaskProvider } from "@providers/mask";
+import { IUniqueIdentifierProvider } from "@providers/uniqueIdentifier";
 import { IValidatorsProvider } from "@providers/validators";
 
 interface IValidateAttrInput {
@@ -28,7 +32,13 @@ class SavePatientService {
     @inject("DateProvider")
     private dateProvider: IDateProvider,
     @inject("MaskProvider")
-    private maskProvider: IMaskProvider
+    private maskProvider: IMaskProvider,
+    @inject("PatientRepository")
+    private patientRepository: IPatientRepository,
+    @inject("AddressRepository")
+    private addressRepository: IAddressRepository,
+    @inject("UniqueIdentifierProvider")
+    private uniqueIdentifierProvider: IUniqueIdentifierProvider
   ) {}
 
   private checkAttributeLengthAndMandatory = ({
@@ -153,7 +163,47 @@ class SavePatientService {
         ])
       );
 
-    return {} as any;
+    const [hasEmail] = await transaction([
+      this.patientRepository.findByEmail({ email }),
+    ]);
+
+    if (hasEmail)
+      throw new AppError("BAD_REQUEST", getMessage("ErrorEmailAlreadyExists"));
+
+    const patientId = this.uniqueIdentifierProvider.generate();
+
+    const [patientSaved, addressSaved] = await transaction([
+      this.patientRepository.save({
+        email,
+        birthDate: birthDateConverted,
+        name,
+        id: patientId,
+      }),
+      this.addressRepository.save({
+        city: address.city,
+        complement: address.complement,
+        district: address.district,
+        publicArea: address.publicArea,
+        state: address.state,
+        zipCode: zipCodeConverted,
+        patientId,
+      }),
+    ]);
+
+    return {
+      id: patientSaved.id,
+      email: patientSaved.email,
+      name: patientSaved.name,
+      birthDate: this.maskProvider.date(patientSaved.birthDate),
+      address: {
+        city: addressSaved.city,
+        complement: addressSaved.complement || undefined,
+        district: addressSaved.district,
+        publicArea: addressSaved.publicArea,
+        state: addressSaved.state,
+        zipCode: this.maskProvider.zipCode(addressSaved.zipCode),
+      },
+    };
   }
 }
 

@@ -1,6 +1,7 @@
 import { BaseRepository } from "src/infra/database/repositories/BaseRepository";
 
 import { patientRepositoryDeleteInput } from "@database/repositories/patient/models/mappers/patientRepositoryDeleteInput";
+import { patientRepositoryFindByEmailInput } from "@database/repositories/patient/models/mappers/patientRepositoryFindByEmailInput";
 import { patientRepositoryGetByIdInput } from "@database/repositories/patient/models/mappers/patientRepositoryGetByIdInput";
 import { AddressModel } from "@models/AddressModel";
 import { PatientModel } from "@models/PatientModel";
@@ -59,6 +60,36 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
   }: patientRepositoryGetByIdInput): PrismaPromise<PatientModel | null> =>
     this.prisma.patient.findFirst({
       where: { id: patientId },
+    });
+
+  findByEmail = ({
+    email,
+  }: patientRepositoryFindByEmailInput): PrismaPromise<PatientModel | null> =>
+    this.prisma.patient.findFirst({
+      where: {
+        email,
+      },
+    });
+
+  save = ({
+    birthDate,
+    email,
+    id,
+    name,
+  }: PatientModel): PrismaPromise<PatientModel> =>
+    this.prisma.patient.upsert({
+      where: { id },
+      create: {
+        id,
+        name,
+        email,
+        birthDate,
+      },
+      update: {
+        name,
+        birthDate,
+        email,
+      },
     });
 }
 
