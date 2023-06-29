@@ -10,8 +10,8 @@ const logMiddleware = new LogMiddleware();
 
 const handleUrlPatternMatchMiddleware = new HandleUrlPatternMatchMiddleware();
 
-routes.get(
-  "/",
+routes.post(
+  "/search",
   handleUrlPatternMatchMiddleware.skipIfHasUrlMatched,
   logMiddleware.routeStart,
   controller.list,

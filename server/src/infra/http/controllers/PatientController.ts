@@ -17,12 +17,17 @@ class PatientController {
     next: NextFunction
   ): Promise<void> {
     const { size, page } = req.query;
+    const { name, email } = req.body;
 
     const service = container.resolve(ListPatientsService);
 
     const result = await service.execute({
       page,
       size,
+      filters: {
+        email,
+        name,
+      },
     });
 
     res.status(HttpStatus.OK).json({
