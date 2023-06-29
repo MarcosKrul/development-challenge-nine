@@ -50,6 +50,12 @@ class UpdatePatientService extends SavePatientService<UpdatePatientRequestModel>
     address,
     id,
   }: UpdatePatientRequestModel): Promise<SavePatientResponseModel> {
+    if (stringIsNullOrEmpty(id))
+      throw new AppError("BAD_REQUEST", getMessage("ErrorPatientIdRequired"));
+
+    if (!this.uniqueIdentifierProvider.isValid(id))
+      throw new AppError("BAD_REQUEST", getMessage("ErrorPatientIdInvalid"));
+
     const [hasPatient, hasAddress] = await transaction([
       this.patientRepository.getById({ patientId: id }),
       this.addressRepository.getByPatientId({ patientId: id }),
