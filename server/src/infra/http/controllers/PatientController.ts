@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { ListPatientsService } from "src/application/services/patient";
+import {
+  DeletePatientService,
+  ListPatientsService,
+} from "src/application/services/patient";
 
 import { container } from "@containers/container";
 import { ListPatientsResponseModel } from "@dtos/patient/ListPatientsResponseModel";
@@ -28,6 +31,28 @@ class PatientController {
         email,
         name,
       },
+    });
+
+    res.status(HttpStatus.OK).json({
+      success: true,
+      content: result,
+      message: getMessage("SuccessGeneric"),
+    });
+
+    return next();
+  }
+
+  public async delete(
+    req: Request,
+    res: Response<IResponseMessage<boolean>>,
+    next: NextFunction
+  ): Promise<void> {
+    const { patient_id: patientId } = req.params;
+
+    const service = container.resolve(DeletePatientService);
+
+    const result = await service.execute({
+      patientId,
     });
 
     res.status(HttpStatus.OK).json({
