@@ -5,7 +5,7 @@ import { AppError } from "@handlers/error/AppError";
 import { getErrorStackTrace } from "@helpers/getErrorStackTrace";
 import { IResponseMessage } from "@http/models/IResponseMessage";
 import { HttpStatus } from "@http/utils/HttpStatus";
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 
 const errorHandlerMiddleware = async (
   err: Error,

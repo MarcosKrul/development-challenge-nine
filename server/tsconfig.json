@@ -31,8 +31,8 @@
       "@config/*": ["./src/infra/config/*"],
       "@http/*": ["./src/infra/http/*"],
       "@commons/*": ["./src/common/*"],
-      "@models/*": ["./src/models/*"],
-      "@infra/*": ["./src/infra/*"],
+      "@models/*": ["./src/application/models/*"],
+      "@log/*": ["./src/infra/log/*"],
       "@containers/*": ["./src/infra/containers/*"],
     }
   }

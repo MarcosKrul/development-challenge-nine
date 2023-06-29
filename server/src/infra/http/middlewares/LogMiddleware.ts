@@ -1,5 +1,5 @@
 import { IMiddleware } from "@http/models/IMiddleware";
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 
 class LogMiddleware {
   private _getRuntimeFormatted = (start: number, end: number): string =>
@@ -24,12 +24,6 @@ class LogMiddleware {
         end
       )}`
     );
-
-    return next();
-  };
-
-  public userAuthenticated: IMiddleware = async ({ user }, _, next) => {
-    logger.info(`User Authenticated: ${user.id}`);
 
     return next();
   };

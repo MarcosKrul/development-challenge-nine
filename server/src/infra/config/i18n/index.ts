@@ -2,7 +2,7 @@ import i18n from "i18n";
 import path from "node:path";
 
 import { AppError } from "@handlers/error/AppError";
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 
 import { Languages } from "./Languagens";
 

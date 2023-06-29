@@ -1,7 +1,7 @@
 import { getMessage } from "@helpers/translatedMessagesControl";
 import { IMiddleware } from "@http/models/IMiddleware";
 import { HttpStatus } from "@http/utils/HttpStatus";
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 
 class HandleUrlPatternMatchMiddleware {
   public setHasUrlMatched =

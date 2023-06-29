@@ -1,5 +1,5 @@
 import { AppError } from "@handlers/error/AppError";
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 
 import { getMessage } from "./translatedMessagesControl";
 

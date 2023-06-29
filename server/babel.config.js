@@ -15,9 +15,9 @@ module.exports = {
         "@config": "./src/infra/config",
         "@http": "./src/infra/http",
         "@commons": "./src/common",
-        "@models": "./src/models",
-        "@infra": "./src/infra",
+        "@models": "./src/application/models",
         "@containers": "./src/infra/containers",
+        "@log": "./src/infra/log",
       }}
     ],
   ],

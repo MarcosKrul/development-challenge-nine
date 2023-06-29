@@ -1,4 +1,4 @@
-import { logger } from "@infra/log";
+import { logger } from "@log/index";
 import { Prisma } from "@prisma/client";
 
 const handleErrorLog = (evt: Prisma.LogEvent): void => {
