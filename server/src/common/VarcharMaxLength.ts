@@ -1,7 +1,7 @@
 class VarcharMaxLength {
-  public static readonly USER_NAME: number = 100;
+  public static readonly PATIENT_NAME: number = 100;
 
-  public static readonly USER_EMAIL: number = 255;
+  public static readonly PATIENT_EMAIL: number = 255;
 
   public static readonly ADDRESS_ZIP_CODE: number = 8;
 

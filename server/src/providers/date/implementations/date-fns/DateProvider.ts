@@ -1,4 +1,9 @@
-import ptBR, { differenceInCalendarYears } from "date-fns";
+import ptBR, {
+  differenceInCalendarYears,
+  isBefore,
+  isValid,
+  parseISO,
+} from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
 import { injectable } from "inversify";
 
@@ -17,6 +22,11 @@ class DateProvider implements IDateProvider {
 
   differenceInYears = (left: Date, rigth: Date): number =>
     differenceInCalendarYears(left, rigth);
+
+  isBefore = (date: Date, toCompare: Date): boolean =>
+    isBefore(date, toCompare);
+
+  isValidISOString = (date: string): boolean => isValid(parseISO(date));
 }
 
 export { DateProvider };
