@@ -11,7 +11,23 @@ model Patient {
   id        String   @id @db.Uuid
   email     String   @unique @db.VarChar(255)
   name      String   @db.VarChar(100)
-  birthDate DateTime @db.Date
+  birthDate DateTime @map("birth_date") @db.Date
+
+  address Address?
 
   @@map("patient")
+}
+
+model Address {
+  zipCode    String  @map("zip_code") @db.VarChar(8)
+  state      String  @db.VarChar(100)
+  city       String  @db.VarChar(100)
+  district   String  @db.VarChar(100)
+  publicArea String  @map("public_area") @db.VarChar(255)
+  complement String? @db.VarChar(255)
+
+  patientId String  @id @map("patient_id") @db.Uuid()
+  patient   Patient @relation(fields: [patientId], references: [id])
+
+  @@map("address")
 }
