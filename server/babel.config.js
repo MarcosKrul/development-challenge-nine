@@ -18,6 +18,7 @@ module.exports = {
         "@models": "./src/application/models",
         "@containers": "./src/infra/containers",
         "@log": "./src/infra/log",
+        "@dtos": "./src/infra/dtos",
       }}
     ],
   ],

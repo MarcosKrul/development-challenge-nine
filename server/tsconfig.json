@@ -33,6 +33,7 @@
       "@commons/*": ["./src/common/*"],
       "@models/*": ["./src/application/models/*"],
       "@log/*": ["./src/infra/log/*"],
+      "@dtos/*": ["./src/infra/dtos/*"],
       "@containers/*": ["./src/infra/containers/*"],
     }
   }
