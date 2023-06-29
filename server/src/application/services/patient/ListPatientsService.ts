@@ -33,7 +33,7 @@ class ListPatientsService {
     IPaginationResponse<ListPatientsResponseModel>
   > {
     if (rawFilters?.email && !this.validatorsProvider.email(rawFilters.email))
-      throw new AppError("BAD_REQUEST", getMessage("ErrorInvalidEmail"));
+      throw new AppError("BAD_REQUEST", getMessage("ErrorEmailInvalid"));
 
     const filters = {
       name: rawFilters?.name || null,
