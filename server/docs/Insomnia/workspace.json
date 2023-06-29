@@ -1,32 +1,32 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2023-06-29T14:43:26.675Z",
+  "__export_date": "2023-06-29T18:34:28.803Z",
   "__export_source": "insomnia.desktop.app:v2022.5.0",
   "resources": [
     {
-      "_id": "req_38865b7c05304395829f3203a19ee12a",
+      "_id": "req_fb8a0fd2505d4bf4bd33ac1e7f8525f6",
       "parentId": "fld_51e21a3d18854b179a205977e0a88125",
-      "modified": 1688049785312,
-      "created": 1688041835891,
-      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/{% request 'name', '', 0 %}",
-      "name": "search",
+      "modified": 1688063655244,
+      "created": 1688056155424,
+      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}",
+      "name": "save",
       "description": "",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"\",\n\t\"email\": \"\"\n}"
+        "text": "{\n\t\"name\": \"Marcos Krul\",\n\t\"email\": \"marcos@email.com\",\n\t\"birthDate\": \"2000-06-02\",\n\t\"address\": {\n\t\t\"city\": \"Ponta Grossa\",\n    \"district\": \"Uvaranas\",\n    \"publicArea\": \"Avenida Cavalcanti\",\n    \"state\": \"Paraná\",\n    \"zipCode\": \"84030-000\",\n    \"complement\": \"\"\n\t}\n}"
       },
       "parameters": [],
       "headers": [
         {
           "name": "Content-Type",
           "value": "application/json",
-          "id": "pair_c1fdffdd172c40f190d662a1a3da0119"
+          "id": "pair_6a8bceb02a994c0490c0bdf4f683e412"
         }
       ],
       "authentication": {},
-      "metaSortKey": -1688041835891,
+      "metaSortKey": -1688056155424,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
@@ -57,6 +57,61 @@
       "description": "",
       "scope": "collection",
       "_type": "workspace"
+    },
+    {
+      "_id": "req_3a91dc643a2d44dfb0e47b8766d619cc",
+      "parentId": "fld_51e21a3d18854b179a205977e0a88125",
+      "modified": 1688062822991,
+      "created": 1688050204876,
+      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/621770dd-d945-464f-a238-cdc7adcd941a",
+      "name": "delete",
+      "description": "",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1688050204876,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_38865b7c05304395829f3203a19ee12a",
+      "parentId": "fld_51e21a3d18854b179a205977e0a88125",
+      "modified": 1688063653450,
+      "created": 1688041835891,
+      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/{% request 'name', '', 0 %}",
+      "name": "search",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"\",\n\t\"email\": \"\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_c1fdffdd172c40f190d662a1a3da0119"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688041835891,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
     },
     {
       "_id": "env_490f0f511f6820b6ce6ab5f2a54c3341977848ff",
