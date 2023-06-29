@@ -1,5 +1,7 @@
 import { BaseRepository } from "src/infra/database/repositories/BaseRepository";
 
+import { patientRepositoryDeleteInput } from "@database/repositories/patient/models/mappers/patientRepositoryDeleteInput";
+import { patientRepositoryGetByIdInput } from "@database/repositories/patient/models/mappers/patientRepositoryGetByIdInput";
 import { AddressModel } from "@models/AddressModel";
 import { PatientModel } from "@models/PatientModel";
 import { PrismaPromise } from "@prisma/client";
@@ -43,6 +45,20 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
       where: {
         AND: clause2searchPatients(filters),
       },
+    });
+
+  delete = ({
+    patientId,
+  }: patientRepositoryDeleteInput): PrismaPromise<PatientModel> =>
+    this.prisma.patient.delete({
+      where: { id: patientId },
+    });
+
+  getById = ({
+    patientId,
+  }: patientRepositoryGetByIdInput): PrismaPromise<PatientModel | null> =>
+    this.prisma.patient.findFirst({
+      where: { id: patientId },
     });
 }
 
