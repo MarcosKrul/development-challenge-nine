@@ -18,6 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "@helpers/*": ["./src/helpers/*"],
+      "@config/*": ["./src/config/*"],
     }
   },
   "include": ["src"],
