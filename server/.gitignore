@@ -1,0 +1,10 @@
+.env
+.env.test
+.env.production
+.env.development
+
+dist
+node_modules
+
+logs/**/*.log
+backup/db/*.sql
