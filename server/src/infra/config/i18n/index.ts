@@ -4,7 +4,7 @@ import path from "node:path";
 import { AppError } from "@handlers/error/AppError";
 import { logger } from "@log/index";
 
-import { Languages } from "./Languagens";
+import { Languages } from "./Languages";
 
 i18n.configure({
   locales: Object.values(Languages),
