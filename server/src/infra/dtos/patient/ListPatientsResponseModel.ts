@@ -5,8 +5,8 @@ type ListPatientsResponseModel = {
   name: string;
   email: string;
   birthDate: string;
-  age: string;
-  address: AddressModel;
+  age: number;
+  address: AddressModel | undefined;
 };
 
 export { ListPatientsResponseModel };
