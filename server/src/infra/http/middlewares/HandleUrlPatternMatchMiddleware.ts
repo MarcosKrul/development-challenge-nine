@@ -11,6 +11,16 @@ class HandleUrlPatternMatchMiddleware {
       return next();
     };
 
+  public skipIfHasUrlMatched: IMiddleware = async (
+    { hasUrlPatternMatched },
+    _,
+    next
+  ) => {
+    if (hasUrlPatternMatched) return next("route");
+
+    return next();
+  };
+
   public verify: IMiddleware<{
     route: string;
     method: string;
