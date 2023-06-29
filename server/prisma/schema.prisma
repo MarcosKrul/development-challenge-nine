@@ -12,6 +12,8 @@ model Patient {
   email     String   @unique @db.VarChar(255)
   name      String   @db.VarChar(100)
   birthDate DateTime @map("birth_date") @db.Date
+  createdAt DateTime @db.Timestamp()
+  updatedAt DateTime @db.Timestamp()
 
   address Address?
 
