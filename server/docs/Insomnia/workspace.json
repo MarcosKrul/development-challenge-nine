@@ -1,0 +1,113 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2023-06-29T14:43:26.675Z",
+  "__export_source": "insomnia.desktop.app:v2022.5.0",
+  "resources": [
+    {
+      "_id": "req_38865b7c05304395829f3203a19ee12a",
+      "parentId": "fld_51e21a3d18854b179a205977e0a88125",
+      "modified": 1688049785312,
+      "created": 1688041835891,
+      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/{% request 'name', '', 0 %}",
+      "name": "search",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"\",\n\t\"email\": \"\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_c1fdffdd172c40f190d662a1a3da0119"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688041835891,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_51e21a3d18854b179a205977e0a88125",
+      "parentId": "wrk_8728884a6438403283fe9d743d06d7f9",
+      "modified": 1688041828460,
+      "created": 1688041828460,
+      "name": "patient",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1688041828460,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_8728884a6438403283fe9d743d06d7f9",
+      "parentId": null,
+      "modified": 1688037810699,
+      "created": 1688037810699,
+      "name": "medcloud",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_490f0f511f6820b6ce6ab5f2a54c3341977848ff",
+      "parentId": "wrk_8728884a6438403283fe9d743d06d7f9",
+      "modified": 1688041842260,
+      "created": 1688037810709,
+      "name": "Base Environment",
+      "data": {},
+      "dataPropertyOrder": {},
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1688037810709,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_490f0f511f6820b6ce6ab5f2a54c3341977848ff",
+      "parentId": "wrk_8728884a6438403283fe9d743d06d7f9",
+      "modified": 1688037810711,
+      "created": 1688037810711,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "spc_0bc4876bf1084a83a441b63b7a5b4b48",
+      "parentId": "wrk_8728884a6438403283fe9d743d06d7f9",
+      "modified": 1688037810700,
+      "created": 1688037810700,
+      "fileName": "medcloud",
+      "contents": "",
+      "contentType": "yaml",
+      "_type": "api_spec"
+    },
+    {
+      "_id": "env_fb856f27697947898604a25e18945447",
+      "parentId": "env_490f0f511f6820b6ce6ab5f2a54c3341977848ff",
+      "modified": 1688041864726,
+      "created": 1688041844094,
+      "name": "dev",
+      "data": {
+        "base_url": "http://localhost:3333/api"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": "#46f316",
+      "isPrivate": false,
+      "metaSortKey": 1688041844094,
+      "_type": "environment"
+    }
+  ]
+}
