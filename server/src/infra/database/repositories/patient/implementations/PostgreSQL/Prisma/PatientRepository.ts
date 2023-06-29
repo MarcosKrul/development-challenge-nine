@@ -25,6 +25,8 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
         email: true,
         name: true,
         birthDate: true,
+        createdAt: true,
+        updatedAt: true,
         address: {
           select: {
             city: true,
@@ -76,6 +78,8 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
     email,
     id,
     name,
+    createdAt,
+    updatedAt,
   }: PatientModel): PrismaPromise<PatientModel> =>
     this.prisma.patient.upsert({
       where: { id },
@@ -84,6 +88,8 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
         name,
         email,
         birthDate,
+        createdAt,
+        updatedAt,
       },
       update: {
         name,

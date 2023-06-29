@@ -178,6 +178,8 @@ class SavePatientService {
         birthDate: birthDateConverted,
         name,
         id: patientId,
+        createdAt: this.dateProvider.now(),
+        updatedAt: this.dateProvider.now(),
       }),
       this.addressRepository.save({
         city: address.city,

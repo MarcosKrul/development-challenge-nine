@@ -5,6 +5,7 @@ import { transaction } from "@database/transaction";
 import { ListPatientsRequestModel } from "@dtos/patient/ListPatientsRequestModel";
 import { ListPatientsResponseModel } from "@dtos/patient/ListPatientsResponseModel";
 import { AppError } from "@handlers/error/AppError";
+import { capitalize } from "@helpers/capitalize";
 import { pagination } from "@helpers/pagination";
 import { getMessage } from "@helpers/translatedMessagesControl";
 import { IPaginationResponse } from "@http/models/IPaginationResponse";
@@ -47,26 +48,30 @@ class ListPatientsService {
 
     return {
       totalItems,
-      items: items.map(({ id, name, email, birthDate, address }) => ({
-        id,
-        name,
-        email,
-        birthDate: this.maskProvider.date(birthDate),
-        age: this.dateProvider.differenceInYears(
-          this.dateProvider.now(),
-          birthDate
-        ),
-        address: address
-          ? {
-              city: address.city,
-              complement: address.complement,
-              district: address.district,
-              publicArea: address.publicArea,
-              state: address.state,
-              zipCode: this.maskProvider.zipCode(address.zipCode),
-            }
-          : undefined,
-      })),
+      items: items.map(
+        ({ id, name, email, birthDate, address, createdAt, updatedAt }) => ({
+          id,
+          name,
+          email,
+          birthDate: this.maskProvider.date(birthDate),
+          age: this.dateProvider.differenceInYears(
+            this.dateProvider.now(),
+            birthDate
+          ),
+          createdAt: capitalize(this.dateProvider.readableDate(createdAt)),
+          updatedAt: capitalize(this.dateProvider.readableDate(updatedAt)),
+          address: address
+            ? {
+                city: address.city,
+                complement: address.complement,
+                district: address.district,
+                publicArea: address.publicArea,
+                state: address.state,
+                zipCode: this.maskProvider.zipCode(address.zipCode),
+              }
+            : undefined,
+        })
+      ),
     };
   }
 }

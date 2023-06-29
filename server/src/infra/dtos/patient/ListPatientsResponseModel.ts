@@ -6,6 +6,8 @@ type ListPatientsResponseModel = {
   email: string;
   birthDate: string;
   age: number;
+  createdAt: string;
+  updatedAt: string;
   address: AddressModel | undefined;
 };
 
