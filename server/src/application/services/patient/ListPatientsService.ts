@@ -1,17 +1,23 @@
 import { inject, injectable } from "inversify";
-import { IPatientRepository } from "src/infra/database/repositories/patient";
-import { transaction } from "src/infra/database/transaction";
 
+import { IPatientRepository } from "@database/repositories/patient";
+import { transaction } from "@database/transaction";
 import { ListPatientsRequestModel } from "@dtos/patient/ListPatientsRequestModel";
 import { ListPatientsResponseModel } from "@dtos/patient/ListPatientsResponseModel";
 import { pagination } from "@helpers/pagination";
 import { IPaginationResponse } from "@http/models/IPaginationResponse";
+import { IDateProvider } from "@providers/date";
+import { IMaskProvider } from "@providers/mask";
 
 @injectable()
 class ListPatientsService {
   constructor(
     @inject("PatientRepository")
-    private patientRepository: IPatientRepository
+    private patientRepository: IPatientRepository,
+    @inject("MaskProvider")
+    private maskProvider: IMaskProvider,
+    @inject("DateProvider")
+    private dateProvider: IDateProvider
   ) {}
 
   public async execute({
@@ -31,16 +37,19 @@ class ListPatientsService {
         id,
         name,
         email,
-        birthDate: birthDate.toISOString(),
-        age: 11,
+        birthDate: this.maskProvider.date(birthDate),
+        age: this.dateProvider.differenceInYears(
+          this.dateProvider.now(),
+          birthDate
+        ),
         address: address
           ? {
-              city: address?.city,
-              complement: address?.complement,
-              district: address?.district,
-              publicArea: address?.publicArea,
-              state: address?.state,
-              zipCode: address?.zipCode,
+              city: address.city,
+              complement: address.complement,
+              district: address.district,
+              publicArea: address.publicArea,
+              state: address.state,
+              zipCode: this.maskProvider.zipCode(address.zipCode),
             }
           : undefined,
       })),
