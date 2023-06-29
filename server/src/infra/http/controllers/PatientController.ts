@@ -44,20 +44,19 @@ class PatientController {
 
   public async delete(
     req: Request,
-    res: Response<IResponseMessage<boolean>>,
+    res: Response<IResponseMessage>,
     next: NextFunction
   ): Promise<void> {
     const { patient_id: patientId } = req.params;
 
     const service = container.resolve(DeletePatientService);
 
-    const result = await service.execute({
+    await service.execute({
       patientId,
     });
 
     res.status(HttpStatus.OK).json({
       success: true,
-      content: result,
       message: getMessage("SuccessGeneric"),
     });
 
