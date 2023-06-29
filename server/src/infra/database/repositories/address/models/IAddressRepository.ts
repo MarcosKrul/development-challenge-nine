@@ -7,7 +7,7 @@ import { addressRepositoryGetByPatientIdInput } from "./mappers/addressRepositor
 interface IAddressRepository {
   delete(_: addressRepositoryDeleteInput): PrismaPromise<AddressModel>;
 
-  getByPatienId(
+  getByPatientId(
     _: addressRepositoryGetByPatientIdInput
   ): PrismaPromise<AddressModel | null>;
 

@@ -63,7 +63,7 @@ class ListPatientsService {
           address: address
             ? {
                 city: address.city,
-                complement: address.complement,
+                complement: address.complement || undefined,
                 district: address.district,
                 publicArea: address.publicArea,
                 state: address.state,

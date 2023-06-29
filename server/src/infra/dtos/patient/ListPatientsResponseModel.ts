@@ -1,5 +1,3 @@
-import { AddressModel } from "@models/AddressModel";
-
 type ListPatientsResponseModel = {
   id: string;
   name: string;
@@ -8,7 +6,16 @@ type ListPatientsResponseModel = {
   age: number;
   createdAt: string;
   updatedAt: string;
-  address: AddressModel | undefined;
+  address:
+    | {
+        city: string;
+        district: string;
+        publicArea: string;
+        state: string;
+        zipCode: string;
+        complement: string | undefined;
+      }
+    | undefined;
 };
 
 export { ListPatientsResponseModel };

@@ -25,20 +25,22 @@ interface IValidateAttrInput {
 }
 
 @injectable()
-class SavePatientService {
+class SavePatientService<
+  T extends SavePatientRequestModel = SavePatientRequestModel
+> {
   constructor(
     @inject("ValidatorsProvider")
-    private validatorsProvider: IValidatorsProvider,
+    protected validatorsProvider: IValidatorsProvider,
     @inject("DateProvider")
-    private dateProvider: IDateProvider,
+    protected dateProvider: IDateProvider,
     @inject("MaskProvider")
-    private maskProvider: IMaskProvider,
+    protected maskProvider: IMaskProvider,
     @inject("PatientRepository")
-    private patientRepository: IPatientRepository,
+    protected patientRepository: IPatientRepository,
     @inject("AddressRepository")
-    private addressRepository: IAddressRepository,
+    protected addressRepository: IAddressRepository,
     @inject("UniqueIdentifierProvider")
-    private uniqueIdentifierProvider: IUniqueIdentifierProvider
+    protected uniqueIdentifierProvider: IUniqueIdentifierProvider
   ) {}
 
   private checkAttributeLengthAndMandatory = ({
@@ -74,12 +76,11 @@ class SavePatientService {
     return this.dateProvider.getUTCDate(date, time || "00:00");
   };
 
-  public async execute({
-    birthDate,
-    email,
-    name,
-    address,
-  }: SavePatientRequestModel): Promise<SavePatientResponseModel> {
+  protected getId = (_: T): string => this.uniqueIdentifierProvider.generate();
+
+  public async execute(input: T): Promise<SavePatientResponseModel> {
+    const { birthDate, email, name, address } = input;
+
     this.checkAttributeLengthAndMandatory({
       att: name,
       requiredErrorMessage: "ErrorNameRequired",
@@ -163,14 +164,14 @@ class SavePatientService {
         ])
       );
 
+    const patientId = this.getId(input);
+
     const [hasEmail] = await transaction([
-      this.patientRepository.findByEmail({ email }),
+      this.patientRepository.findByEmail({ email, patientId }),
     ]);
 
     if (hasEmail)
       throw new AppError("BAD_REQUEST", getMessage("ErrorEmailAlreadyExists"));
-
-    const patientId = this.uniqueIdentifierProvider.generate();
 
     const [patientSaved, addressSaved] = await transaction([
       this.patientRepository.save({

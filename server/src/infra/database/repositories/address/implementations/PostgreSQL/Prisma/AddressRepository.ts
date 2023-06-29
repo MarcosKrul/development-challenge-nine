@@ -15,7 +15,7 @@ class AddressRepository extends BaseRepository implements IAddressRepository {
       },
     });
 
-  getByPatienId = ({
+  getByPatientId = ({
     patientId,
   }: addressRepositoryGetByPatientIdInput): PrismaPromise<AddressModel | null> =>
     this.prisma.address.findFirst({

@@ -66,10 +66,12 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
 
   findByEmail = ({
     email,
+    patientId,
   }: patientRepositoryFindByEmailInput): PrismaPromise<PatientModel | null> =>
     this.prisma.patient.findFirst({
       where: {
         email,
+        id: { not: patientId },
       },
     });
 
@@ -95,6 +97,7 @@ class PatientRepository extends BaseRepository implements IPatientRepository {
         name,
         birthDate,
         email,
+        updatedAt,
       },
     });
 }
