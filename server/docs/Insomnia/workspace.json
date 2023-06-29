@@ -1,13 +1,13 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2023-06-29T18:34:28.803Z",
+  "__export_date": "2023-06-29T19:34:47.423Z",
   "__export_source": "insomnia.desktop.app:v2022.5.0",
   "resources": [
     {
       "_id": "req_fb8a0fd2505d4bf4bd33ac1e7f8525f6",
       "parentId": "fld_51e21a3d18854b179a205977e0a88125",
-      "modified": 1688063655244,
+      "modified": 1688067201239,
       "created": 1688056155424,
       "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}",
       "name": "save",
@@ -59,6 +59,38 @@
       "_type": "workspace"
     },
     {
+      "_id": "req_0179a54989684f119c7e046ae4611d25",
+      "parentId": "fld_51e21a3d18854b179a205977e0a88125",
+      "modified": 1688067215548,
+      "created": 1688066464047,
+      "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/cba9347b-2404-4ad6-b0e4-7c344b1d9aba",
+      "name": "update",
+      "description": "",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Marcos Krul\",\n\t\"email\": \"marcos@email.com\",\n\t\"birthDate\": \"2000-06-03\",\n\t\"address\": {\n\t\t\"city\": \"Ponta Grossa\",\n    \"district\": \"Uvaranas\",\n    \"publicArea\": \"Avenida General Cavalcanti\",\n    \"state\": \"Paraná\",\n    \"zipCode\": \"84030-000\",\n    \"complement\": \"\"\n\t}\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_6a8bceb02a994c0490c0bdf4f683e412"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688053180150,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_3a91dc643a2d44dfb0e47b8766d619cc",
       "parentId": "fld_51e21a3d18854b179a205977e0a88125",
       "modified": 1688062822991,
@@ -84,7 +116,7 @@
     {
       "_id": "req_38865b7c05304395829f3203a19ee12a",
       "parentId": "fld_51e21a3d18854b179a205977e0a88125",
-      "modified": 1688063653450,
+      "modified": 1688067220596,
       "created": 1688041835891,
       "url": "{{ _.base_url }}/{% request 'folder', '', 0 %}/{% request 'name', '', 0 %}",
       "name": "search",
