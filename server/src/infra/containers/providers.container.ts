@@ -1,9 +1,9 @@
-import { DateProvider, IDateProvider } from "src/providers/date";
-import { IMaskProvider, MaskProvider } from "src/providers/mask";
+import { DateProvider, IDateProvider } from "@providers/date";
+import { IMaskProvider, MaskProvider } from "@providers/mask";
 import {
   IUniqueIdentifierProvider,
   UniqueIdentifierProvider,
-} from "src/providers/uniqueIdentifier";
+} from "@providers/uniqueIdentifier";
 
 import { container } from "./container";
 

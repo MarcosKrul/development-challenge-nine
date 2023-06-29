@@ -19,6 +19,8 @@ module.exports = {
         "@containers": "./src/infra/containers",
         "@log": "./src/infra/log",
         "@dtos": "./src/infra/dtos",
+        "@provider": "./src/providers",
+        "@database": "./src/infra/database",
       }}
     ],
   ],
