@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { NotFound } from '@pages/NotFound';
 import { Main } from '@pages/Main';
 import { HomeRoutes } from './home.routes';
@@ -10,6 +10,7 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />}>
+          <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home/*" element={<HomeRoutes />} />
           <Route path="/patients/*" element={<PatientRoutes />} />
         </Route>
