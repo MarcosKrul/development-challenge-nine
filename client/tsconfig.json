@@ -21,6 +21,8 @@
       "@routes/*": ["./src/routes/*"],
       "@helpers/*": ["./src/helpers/*"],
       "@config/*": ["./src/config/*"],
+      "@components/*": ["./src/components/*"],
+      "@global/*": ["./src/global/*"],
     }
   },
   "include": ["src"],
