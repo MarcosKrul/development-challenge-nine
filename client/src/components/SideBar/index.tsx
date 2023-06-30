@@ -4,16 +4,14 @@ import MuiDrawer from '@mui/material/Drawer';
 import constants from '@global/constants';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { NavLink } from 'react-router-dom';
 import { SideBarHeader } from '@components/SideBarHeader';
 import { routes } from '@global/routes';
+import { NavItem } from './styles';
+import { useTheme } from '@mui/material/styles';
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: constants.SIDE_BAR_WIDTH,
@@ -56,25 +54,26 @@ const Drawer = styled(MuiDrawer, {
 interface ISideBarProps {
   open: boolean;
   handleDrawerClose: () => void;
-  theme: Theme;
 }
 
-const SideBar = ({ open, handleDrawerClose, theme }: ISideBarProps) => {
+const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
+  const theme = useTheme();
+
   return (
-    <Drawer variant="permanent" open={open}>
-      <SideBarHeader>
-        <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'rtl' ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
-        </IconButton>
-      </SideBarHeader>
+    <Drawer
+      variant="permanent"
+      open={open}
+      PaperProps={{
+        sx: {
+          backgroundColor: theme.palette.primary.main,
+        },
+      }}
+    >
+      <SideBarHeader handleDrawerClose={handleDrawerClose} />
       <Divider />
       <List>
         {routes.map(({ label, path, icon }) => (
-          <NavLink to={path} key={label}>
+          <NavItem to={path} key={label}>
             <ListItem key={label} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -95,7 +94,7 @@ const SideBar = ({ open, handleDrawerClose, theme }: ISideBarProps) => {
                 <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-          </NavLink>
+          </NavItem>
         ))}
       </List>
     </Drawer>

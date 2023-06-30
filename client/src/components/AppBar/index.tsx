@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
+import { getMessage } from '@helpers/getMessage';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -51,7 +52,7 @@ const AppBar = ({ handleDrawerOpen, open }: IAppBarProps) => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Mini variant drawer
+          {getMessage('LABEL_HEADER')}
         </Typography>
       </Toolbar>
     </DrawerHeader>
