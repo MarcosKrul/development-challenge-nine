@@ -1,23 +1,18 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import PatientIcon from '@mui/icons-material/Sick';
 import HomeIcon from '@mui/icons-material/Home';
+import { AppRouteModel } from '@models/AppRouteModel';
 
-interface IAppRoute {
-  path: string;
-  labelKey: string;
-  icon: () => ReactNode;
-}
-
-const routes: IAppRoute[] = [
+const routes: AppRouteModel[] = [
   {
     labelKey: 'LABEL_HOME',
     path: '/home/',
-    icon: (): ReactNode => <HomeIcon />,
+    icon: () => <HomeIcon />,
   },
   {
     labelKey: 'LABEL_PATIENTS',
     path: '/patients/',
-    icon: (): ReactNode => <PatientIcon />,
+    icon: () => <PatientIcon />,
   },
 ];
 

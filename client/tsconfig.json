@@ -23,6 +23,7 @@
       "@config/*": ["./src/config/*"],
       "@components/*": ["./src/components/*"],
       "@global/*": ["./src/global/*"],
+      "@models/*": ["./src/models/*"],
     }
   },
   "include": ["src"],

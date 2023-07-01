@@ -1,9 +1,6 @@
-interface ILanguageOption {
-  labelKey: string;
-  value: string;
-}
+import { LanguageSelectOptionModel } from '@models/LanguageSelectOptionModel';
 
-const languages: ILanguageOption[] = [
+const languages: LanguageSelectOptionModel[] = [
   {
     labelKey: 'LABEL_PT_BR',
     value: 'pt-br',
