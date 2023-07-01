@@ -58,8 +58,14 @@ class ListPatientsService {
             this.dateProvider.now(),
             birthDate
           ),
-          createdAt: capitalize(this.dateProvider.readableDate(createdAt)),
-          updatedAt: capitalize(this.dateProvider.readableDate(updatedAt)),
+          createdAt: {
+            readableDate: capitalize(this.dateProvider.readableDate(createdAt)),
+            date: this.maskProvider.timestamp(createdAt),
+          },
+          updatedAt: {
+            readableDate: capitalize(this.dateProvider.readableDate(updatedAt)),
+            date: this.maskProvider.timestamp(updatedAt),
+          },
           address: address
             ? {
                 city: address.city,

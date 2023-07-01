@@ -4,8 +4,14 @@ type ListPatientsResponseModel = {
   email: string;
   birthDate: string;
   age: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: {
+    date: string;
+    readableDate: string;
+  };
+  updatedAt: {
+    date: string;
+    readableDate: string;
+  };
   address:
     | {
         city: string;
