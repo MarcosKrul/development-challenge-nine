@@ -28,9 +28,12 @@
   "TITLE_PATIENTS_CONTROL": "Gerenciamento de pacientes",
   "BUTTON_ADD": "ADICIONAR",
   "BUTTON_SEARCH": "BUSCAR",
+  "BUTTON_GO_HOME": "VOLTAR PARA O INÍCIO",
   "BUTTON_DELETAR": "DELETAR",
   "BUTTON_CANCEL": "CANCELAR",
   "TITLE_POPUP_DELETE": "Você possui certeza?",
   "TEXT_POPUP_DELETE": "Ao confirmar esta ação, o paciente não poderá ser recuperado",
-  "TEXT_PATIENT_EMPTY_LIST": "Não foram encontrados pacientes com os filtros informados"
+  "TEXT_PATIENT_EMPTY_LIST": "Não foram encontrados pacientes com os filtros informados",
+  "TEXT_NOT_FOUND_PAGE_TITLE": "Ops! Não era para você ter acessado esta página!",
+  "TEXT_GO_HOME": "Volte para a página inicial"
 }

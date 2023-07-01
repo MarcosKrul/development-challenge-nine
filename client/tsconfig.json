@@ -25,6 +25,7 @@
       "@global/*": ["./src/global/*"],
       "@models/*": ["./src/models/*"],
       "@context/*": ["./src/context/*"],
+      "@assets/*": ["./assets/*"],
     }
   },
   "include": ["src"],
