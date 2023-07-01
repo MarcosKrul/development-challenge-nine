@@ -6,7 +6,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import { getMessage } from '@helpers/getMessage';
+import { LanguageSelector } from '@components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
+import { Container } from './styles';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -36,6 +38,8 @@ interface IAppBarProps {
 }
 
 const AppBar = ({ handleDrawerOpen, open }: IAppBarProps) => {
+  const { t } = useTranslation();
+
   return (
     <DrawerHeader position="fixed" open={open}>
       <Toolbar>
@@ -51,9 +55,12 @@ const AppBar = ({ handleDrawerOpen, open }: IAppBarProps) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          {getMessage('LABEL_HEADER')}
-        </Typography>
+        <Container>
+          <Typography variant="h6" component="div">
+            {t('LABEL_HEADER')}
+          </Typography>
+          <LanguageSelector />
+        </Container>
       </Toolbar>
     </DrawerHeader>
   );

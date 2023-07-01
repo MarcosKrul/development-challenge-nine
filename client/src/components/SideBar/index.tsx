@@ -12,6 +12,7 @@ import { SideBarHeader } from '@components/SideBarHeader';
 import { routes } from '@global/routes';
 import { NavItem } from './styles';
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: constants.SIDE_BAR_WIDTH,
@@ -58,6 +59,7 @@ interface ISideBarProps {
 
 const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Drawer
@@ -72,9 +74,9 @@ const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
       <SideBarHeader handleDrawerClose={handleDrawerClose} />
       <Divider />
       <List>
-        {routes.map(({ label, path, icon }) => (
-          <NavItem to={path} key={label}>
-            <ListItem key={label} disablePadding sx={{ display: 'block' }}>
+        {routes.map(({ labelKey, path, icon }) => (
+          <NavItem to={path} key={labelKey}>
+            <ListItem key={labelKey} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -91,7 +93,10 @@ const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
                 >
                   {icon()}
                 </ListItemIcon>
-                <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={t(labelKey)}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           </NavItem>

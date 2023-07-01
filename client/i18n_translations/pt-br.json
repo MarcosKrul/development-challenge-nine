@@ -1,5 +1,8 @@
 {
-  "LABEL_HOME": "Home",
+  "LABEL_HOME": "Início",
   "LABEL_PATIENTS": "Pacientes",
-  "LABEL_HEADER": "Controle de registros de pacientes"
+  "LABEL_HEADER": "Controle de registros de pacientes",
+  "LABEL_LANGUAGE": "Idioma",
+  "LABEL_PT_BR": "Português (Brasil)",
+  "LABEL_EN": "Inglês"
 }
