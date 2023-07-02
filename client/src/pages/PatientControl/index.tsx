@@ -20,26 +20,12 @@ import { PatientsTable } from './PatientsTable';
 import { TablePagination } from '@mui/material';
 import constants from '@global/constants';
 import { useNavigate } from 'react-router-dom';
+import { usePatients } from '@context/Patients';
+import { customToast } from '@helpers/customToast';
 
 const rows = [
   {
-    id: 'cba9347b-2404-4ad6-b0e4-7c344b1d9aba',
-    name: 'Marcos Krul',
-    email: 'marcos@email.com',
-    birthDate: '03/06/2000',
-    age: 23,
-    createdAt: { readableDate: 'Há 4 horas', date: '01/01/2002' },
-    updatedAt: { readableDate: 'Este minuto', date: '01/01/2002' },
-    address: {
-      city: 'Ponta Grossa',
-      district: 'Uvaranas',
-      publicArea: 'Avenida General Cavalcanti',
-      state: 'Paraná',
-      zipCode: '84030-000',
-    },
-  },
-  {
-    id: 'cba9347b-2404-4ad6-b0e4-7c344badawaba',
+    id: '26919bdf-f85f-4184-96e6-ef0604ce8814',
     name: 'Marcos Krul',
     email: 'marcos@email.com',
     birthDate: '03/06/2000',
@@ -57,6 +43,7 @@ const rows = [
 ];
 
 const PatientControl = () => {
+  const { remove } = usePatients();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const formMethods = useForm();
@@ -90,11 +77,23 @@ const PatientControl = () => {
   };
 
   const handleDelete = async (id: string): Promise<void> => {
-    console.log('detete patient: ' + id);
+    try {
+      const { message } = await remove(id);
+      customToast({
+        text: t(message),
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      customAlert({
+        title: t('ERROR_GENERIC_TITLE'),
+        text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
+        icon: 'error',
+      });
+    }
   };
 
   const handleEdit = (id: string): void => {
-    console.log('edit patient: ' + id);
+    navigate('/patients/save', { state: { id } });
   };
 
   return (

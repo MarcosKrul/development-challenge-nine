@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isAfter, isEqual, isValid } from 'date-fns';
 import {
   AuxDataFirst,
@@ -19,7 +19,7 @@ import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import SectionDivider from '@components/SectionDivider';
 import { CustomInput } from '@components/CustomInput';
 import { ZipCodeResponseModel } from '@models/ZipCodeResponseModel';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CustomDatePicker } from '@components/CustomDatePicker';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress } from '@mui/material';
@@ -27,10 +27,15 @@ import AsyncInput from '@components/CustomAsyncInput';
 import { customAlert } from '@helpers/customAlert';
 import { getZipCodeInfos } from '@services/zipCode';
 import { CustomSimpleInput } from '@components/CustomSimpleInput';
-import { CreatePatientRequestBodyModel } from '@models/patients/CreatePatientRequestBodyModel';
+import { CreatePatientRequestBodyModel } from '@context/Patients/models/CreatePatientRequestBodyModel';
+import { usePatients } from '@context/Patients';
+import { customToast } from '@helpers/customToast';
 
 const PatientPersistence = () => {
   const { t } = useTranslation();
+  const [id, setId] = useState<string | null>(null);
+  const location = useLocation();
+  const { create } = usePatients();
   const formMethods = useForm();
   const navigate = useNavigate();
   const { handleSubmit } = formMethods;
@@ -40,16 +45,40 @@ const PatientPersistence = () => {
     null
   );
 
+  useEffect(() => {
+    if (!location.state || !location.state.id) return;
+
+    setId(location.state.id);
+
+    (async () => {
+      console.log('edit with :' + location.state.id);
+    })();
+  }, []);
+
   const onSubmit = async (rawData: FieldValues): Promise<void> => {
     const data: CreatePatientRequestBodyModel = {
       name: rawData.name,
       email: rawData.email,
-      birthDate: new Date(rawData.birthDate).toISOString(),
+      birthDate: new Date(rawData.birthDate).toISOString().split('T')[0],
       address: {
         ...zipCodeInfos,
         complement: rawData.address.complement,
       },
     };
+
+    try {
+      const { message } = await create(data);
+      customToast({
+        text: t(message),
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      customAlert({
+        title: t('ERROR_GENERIC_TITLE'),
+        text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
+        icon: 'error',
+      });
+    }
 
     console.log(data);
   };
