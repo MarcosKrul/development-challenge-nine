@@ -33,6 +33,7 @@
   "ERROR_BIRTH_DATE_FUTURE": "Data de nascimento não pode ser futura",
   "ERROR_GET_ZIPCODE_INFOS": "Ocorreu um problema ao buscar os dados do CEP",
   "ERROR_GENERIC_TITLE": "Ops!! Ocorreu um problema.",
+  "ERROR_HOOK_INVALID_USE": "Este hook deve ser utilizado dentro de seu provider",
   "ERROR_GENERIC_API_RESPONSE": "Ocorreu um erro inesperado",
   "LABEL_PATIENT_AUX_DATA": "Dados auxiliares do paciente",
   "LABEL_CREATED_AT": "Criado em",
