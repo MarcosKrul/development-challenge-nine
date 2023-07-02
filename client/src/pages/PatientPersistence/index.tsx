@@ -110,7 +110,7 @@ const PatientPersistence = () => {
         <div>
           <BoxHeader>
             <PageTitle>
-              {true ? t('LABEL_EDIT_PATIENT') : t('LABEL_CREATE_PAIENT')}
+              {id ? t('LABEL_EDIT_PATIENT') : t('LABEL_CREATE_PAIENT')}
             </PageTitle>
           </BoxHeader>
           <FormProvider {...formMethods}>
