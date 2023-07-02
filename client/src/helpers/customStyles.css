@@ -1,3 +1,7 @@
 .swal2-container {
   z-index: 20000 !important;
 }
+
+.toast-progress-bar { 
+  background: #0a6789;
+}

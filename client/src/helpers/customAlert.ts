@@ -1,4 +1,4 @@
-import './customAlert.css';
+import './customStyles.css';
 import colors from '@global/colors';
 import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
