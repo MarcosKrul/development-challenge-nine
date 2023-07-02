@@ -23,6 +23,8 @@ i18n.configure({
       switch (locale) {
         case Languages.PORTUGUESE:
           return "Ocorreu um erro interno no servidor";
+        case Languages.ENGLISH:
+          return "An internal error occurred on the server";
         default:
           return "";
       }
