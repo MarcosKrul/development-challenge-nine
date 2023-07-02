@@ -19,6 +19,7 @@ import colors from '@global/colors';
 import { PatientsTable } from './PatientsTable';
 import { TablePagination } from '@mui/material';
 import constants from '@global/constants';
+import { useNavigate } from 'react-router-dom';
 
 const rows = [
   {
@@ -56,6 +57,7 @@ const rows = [
 ];
 
 const PatientControl = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const formMethods = useForm();
   const { handleSubmit } = formMethods;
@@ -120,7 +122,7 @@ const PatientControl = () => {
         <ButtonsContainer>
           <StyledButton
             disabled={loading}
-            onClick={() => console.log('create')}
+            onClick={() => navigate('/patients/save')}
           >
             {t('BUTTON_ADD')}
           </StyledButton>
