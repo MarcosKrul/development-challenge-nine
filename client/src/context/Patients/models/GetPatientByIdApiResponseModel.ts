@@ -1,4 +1,4 @@
-type GetPatientByIdResponseModel = {
+type GetPatientByIdApiResponseModel = {
   id: string;
   email: string;
   name: string;
@@ -13,4 +13,4 @@ type GetPatientByIdResponseModel = {
   };
 };
 
-export type { GetPatientByIdResponseModel };
+export type { GetPatientByIdApiResponseModel };

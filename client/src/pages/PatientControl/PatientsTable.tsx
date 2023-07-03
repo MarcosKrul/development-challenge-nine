@@ -4,7 +4,6 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { ListPatientsResponseModel } from '@context/Patients/models/ListPatientsResponseModel';
 import { useTranslation } from 'react-i18next';
 import SectionDivider from '@components/SectionDivider';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,11 +18,12 @@ import {
   PatientsTableCollapseText,
 } from './styles';
 import { TableBody, TableContainer, TableHead, Tooltip } from '@mui/material';
+import { ListPatientsApiResponseModel } from '@context/Patients/models/ListPatientsApiResponseModel';
 
 interface IPatientsTableProps {
   deleteFn: (id: string) => void;
   editFn: (id: string) => void;
-  rows: ListPatientsResponseModel[];
+  rows: ListPatientsApiResponseModel[];
 }
 
 const columns: TableColumnModel[] = [

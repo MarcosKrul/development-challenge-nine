@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,37 +23,47 @@ import { useNavigate } from 'react-router-dom';
 import { usePatients } from '@context/Patients';
 import { customToast } from '@helpers/customToast';
 
-const rows = [
-  {
-    id: '26919bdf-f85f-4184-96e6-ef0604ce8814',
-    name: 'Marcos Krul',
-    email: 'marcos@email.com',
-    birthDate: '03/06/2000',
-    age: 23,
-    createdAt: { readableDate: 'Há 4 horas', date: '01/01/2002' },
-    updatedAt: { readableDate: 'Este minuto', date: '01/01/2002' },
-    address: {
-      city: 'Ponta Grossa',
-      district: 'Uvaranas',
-      publicArea: 'Avenida General Cavalcanti',
-      state: 'Paraná',
-      zipCode: '84030-000',
-    },
-  },
-];
-
 const PatientControl = () => {
-  const { remove } = usePatients();
+  const { remove, count, patients, getPatients } = usePatients();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const formMethods = useForm();
-  const { handleSubmit } = formMethods;
-  const [loading] = useState<boolean>(false);
+  const { handleSubmit, setValue } = formMethods;
+  const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
 
+  useEffect(() => {
+    (async () => {
+      await onSubmit({
+        search_filter_email: '',
+        search_filter_name: '',
+      });
+    })();
+  }, [page]);
+
   const onSubmit = async (data: FieldValues): Promise<void> => {
-    console.log('trigger search with: ');
-    console.log(data);
+    try {
+      setLoading(true);
+      await getPatients({
+        page,
+        size: constants.PAGE_SIZE,
+        filters: {
+          email: data.search_filter_email,
+          name: data.search_filter_name,
+        },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setValue('search_filter_email', '');
+
+      customAlert({
+        title: t('ERROR_GENERIC_TITLE'),
+        text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
+        icon: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const confirmDeletePopUp = (id: string): void => {
@@ -131,9 +141,9 @@ const PatientControl = () => {
         </ButtonsContainer>
       </BoxHeader>
 
-      {rows.length > 0 ? (
+      {count > 0 ? (
         <PatientsTable
-          rows={rows}
+          rows={patients}
           editFn={handleEdit}
           deleteFn={confirmDeletePopUp}
         />
@@ -147,7 +157,7 @@ const PatientControl = () => {
         sx={{ overflow: 'hidden', minHeight: 60 }}
         rowsPerPageOptions={[]}
         component="div"
-        count={rows.length}
+        count={count}
         rowsPerPage={constants.PAGE_SIZE}
         page={page}
         onPageChange={(e, page) => setPage(page)}

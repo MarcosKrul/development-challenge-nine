@@ -1,4 +1,4 @@
-type ListPatientsResponseModel = {
+type ListPatientsApiResponseModel = {
   id: string;
   name: string;
   email: string;
@@ -22,4 +22,4 @@ type ListPatientsResponseModel = {
   };
 };
 
-export type { ListPatientsResponseModel };
+export type { ListPatientsApiResponseModel };
