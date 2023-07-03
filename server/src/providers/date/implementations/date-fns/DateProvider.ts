@@ -5,13 +5,10 @@ import ptBR, {
   parseISO,
 } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
+import i18n from "i18n";
 import { injectable } from "inversify";
 
 import { IDateProvider } from "../../models/IDateProvider";
-
-const rtf = new Intl.RelativeTimeFormat("pt-br", {
-  numeric: "auto",
-});
 
 @injectable()
 class DateProvider implements IDateProvider {
@@ -36,6 +33,10 @@ class DateProvider implements IDateProvider {
     end.getTime() - start.getTime();
 
   readableDate = (date: Date): string => {
+    const rtf = new Intl.RelativeTimeFormat(i18n.getLocale(), {
+      numeric: "auto",
+    });
+
     const now = this.now();
     const differenceInSeconds = Math.abs(
       this.differenceInMillis(now, date) / 1000
