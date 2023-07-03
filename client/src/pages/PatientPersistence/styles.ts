@@ -105,3 +105,10 @@ export const RequiredFieldsHelp = styled(Typography)`
   font-weight: 500;
   align-self: flex-end;
 `;
+
+export const ContainerCircularProgress = styled('div')`
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

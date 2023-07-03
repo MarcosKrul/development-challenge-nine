@@ -5,12 +5,20 @@ import { CreatePatientApiResponseModel } from './models/CreatePatientApiResponse
 import { api } from '@services/api';
 import constants from '@global/constants';
 import { useTranslation } from 'react-i18next';
+import { GetPatientByIdResponseModel } from './models/GetPatientByIdResponseModel';
 
 interface PatientsContextData {
   create: (
     data: CreatePatientRequestBodyModel
   ) => Promise<ApiResponseModel<CreatePatientApiResponseModel>>;
+  update: (
+    id: string,
+    data: CreatePatientRequestBodyModel
+  ) => Promise<ApiResponseModel<CreatePatientApiResponseModel>>;
   remove: (id: string) => Promise<ApiResponseModel<boolean>>;
+  getById: (
+    id: string
+  ) => Promise<ApiResponseModel<GetPatientByIdResponseModel>>;
 }
 
 interface PatientProviderProps {
@@ -42,9 +50,46 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     return response;
   };
 
+  const update = async (
+    id: string,
+    data: CreatePatientRequestBodyModel
+  ): Promise<ApiResponseModel<CreatePatientApiResponseModel>> => {
+    const {
+      data: response,
+    }: { data: ApiResponseModel<CreatePatientApiResponseModel> } =
+      await api.put(
+        `/patient/${id}?lang=${localStorage.getItem(
+          constants.LOCALSTORAGE_LANGUAGE
+        )}`,
+        {
+          ...data,
+        }
+      );
+
+    return response;
+  };
+
   const remove = async (id: string): Promise<ApiResponseModel<boolean>> => {
     const { data: response }: { data: ApiResponseModel<boolean> } =
-      await api.delete(`/patient/${id}`);
+      await api.delete(
+        `/patient/${id}?lang=${localStorage.getItem(
+          constants.LOCALSTORAGE_LANGUAGE
+        )}`
+      );
+
+    return response;
+  };
+
+  const getById = async (
+    id: string
+  ): Promise<ApiResponseModel<GetPatientByIdResponseModel>> => {
+    const {
+      data: response,
+    }: { data: ApiResponseModel<GetPatientByIdResponseModel> } = await api.get(
+      `/patient/${id}?lang=${localStorage.getItem(
+        constants.LOCALSTORAGE_LANGUAGE
+      )}`
+    );
 
     return response;
   };
@@ -53,7 +98,9 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     <PatientsContext.Provider
       value={{
         create,
+        update,
         remove,
+        getById,
       }}
     >
       {children}

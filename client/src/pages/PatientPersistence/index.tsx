@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isAfter, isEqual, isValid } from 'date-fns';
+import { isAfter, isEqual, isValid, parse } from 'date-fns';
 import {
   AuxDataFirst,
   AuxDataSecond,
@@ -14,6 +14,7 @@ import {
   StyledButton,
   StyledButtonInverted,
   StyledForm,
+  ContainerCircularProgress,
 } from './styles';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import SectionDivider from '@components/SectionDivider';
@@ -35,11 +36,12 @@ const PatientPersistence = () => {
   const { t } = useTranslation();
   const [id, setId] = useState<string | null>(null);
   const location = useLocation();
-  const { create } = usePatients();
+  const { create, getById, update } = usePatients();
   const formMethods = useForm();
   const navigate = useNavigate();
-  const { handleSubmit } = formMethods;
-  const [loading] = useState<boolean>(false);
+  const { handleSubmit, setValue } = formMethods;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [getPatientLoading, setGetPatientLoading] = useState<boolean>(false);
   const [inputLoading, setInputLoading] = useState<boolean>(false);
   const [zipCodeInfos, setZipCodeInfos] = useState<ZipCodeResponseModel | null>(
     null
@@ -51,7 +53,40 @@ const PatientPersistence = () => {
     setId(location.state.id);
 
     (async () => {
-      console.log('edit with :' + location.state.id);
+      try {
+        setGetPatientLoading(true);
+        const { content } = await getById(location.state.id);
+
+        setValue('name', content?.name || '');
+        setValue('email', content?.email || '');
+        setValue(
+          'birthDate',
+          content?.birthDate
+            ? parse(content?.birthDate, 'dd/MM/yyyy', new Date())
+            : new Date()
+        );
+        setValue('address.complement', content?.address.complement || '');
+        setValue('address.zipCode', content?.address.zipCode || '');
+
+        setZipCodeInfos({
+          city: content?.address.city || '',
+          district: content?.address.district || '',
+          publicArea: content?.address.publicArea || '',
+          state: content?.address.state || '',
+          zipCode: content?.address.zipCode || '',
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        customAlert({
+          title: t('ERROR_GENERIC_TITLE'),
+          text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
+          icon: 'error',
+        }).then((result) => {
+          if (result.isConfirmed) navigate('/patients/');
+        });
+      } finally {
+        setGetPatientLoading(false);
+      }
     })();
   }, []);
 
@@ -67,7 +102,8 @@ const PatientPersistence = () => {
     };
 
     try {
-      const { message } = await create(data);
+      setLoading(true);
+      const { message } = id ? await update(id, data) : await create(data);
       customToast({
         text: t(message),
       });
@@ -78,9 +114,9 @@ const PatientPersistence = () => {
         text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
         icon: 'error',
       });
+    } finally {
+      setLoading(false);
     }
-
-    console.log(data);
   };
 
   const handleZipCodeComplete = async (value: string): Promise<void> => {
@@ -106,185 +142,196 @@ const PatientPersistence = () => {
 
   return (
     <Container>
-      <CustomBox>
-        <div>
-          <BoxHeader>
-            <PageTitle>
-              {id ? t('LABEL_EDIT_PATIENT') : t('LABEL_CREATE_PAIENT')}
-            </PageTitle>
-          </BoxHeader>
-          <FormProvider {...formMethods}>
-            <StyledForm id="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-              <SectionDivider>{t('LABEL_PERSONAL_DATA')}</SectionDivider>
+      {getPatientLoading ? (
+        <ContainerCircularProgress>
+          <CircularProgress size={100}></CircularProgress>
+        </ContainerCircularProgress>
+      ) : (
+        <CustomBox>
+          <div>
+            <BoxHeader>
+              <PageTitle>
+                {id ? t('LABEL_EDIT_PATIENT') : t('LABEL_CREATE_PAIENT')}
+              </PageTitle>
+            </BoxHeader>
+            <FormProvider {...formMethods}>
+              <StyledForm
+                id="form"
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+              >
+                <SectionDivider>{t('LABEL_PERSONAL_DATA')}</SectionDivider>
 
-              <PersonalDataFirst>
-                <CustomInput
-                  rules={{
-                    required: {
-                      value: true,
-                      message: t('ERROR_NAME_REQUIRED'),
-                    },
-                  }}
-                  name="name"
-                  label={t('LABEL_NAME')}
-                  required
-                />
-                <CustomInput
-                  required
-                  name="email"
-                  label={t('LABEL_EMAIL')}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: t('ERROR_EMAIL_REQUIRED'),
-                    },
-                  }}
-                />
-              </PersonalDataFirst>
-
-              <PersonalDataSecond>
-                <CustomDatePicker
-                  name="birthDate"
-                  required
-                  rules={{
-                    required: {
-                      value: true,
-                      message: t('ERROR_BIRTH_DATE_REQUIRED'),
-                    },
-                    validate: (date) => {
-                      if (!isValid(date)) return t('ERROR_BIRTH_DATE_INVALID');
-
-                      date.setHours(0, 0, 0, 0);
-                      const currenDate = new Date();
-                      currenDate.setHours(0, 0, 0, 0);
-
-                      return (
-                        (!isAfter(date, currenDate) &&
-                          !isEqual(date, currenDate)) ||
-                        t('ERROR_BIRTH_DATE_FUTURE')
-                      );
-                    },
-                  }}
-                  label={t('LABEL_BIRTH_DATE')}
-                  defaultValue={new Date()}
-                />
-              </PersonalDataSecond>
-
-              <SectionDivider>{t('LABEL_ADDRESS_DATA')}</SectionDivider>
-              <AuxDataFirst>
-                <AsyncInput
-                  required
-                  name="address.zipCode"
-                  label={t('LABEL_ZIP_CODE')}
-                  onCompleteZipCode={handleZipCodeComplete}
-                  inputLoading={inputLoading}
-                  defaultValue={''}
-                  maxLength={9}
-                  mask={(s: string): string =>
-                    `${s
-                      .replace(/\D/g, '')
-                      .replace(/(\d{5})(\d)/, '$1-$2')
-                      .replace(/(-\d{3})\d+?$/, '$1')}`
-                  }
-                />
-                <CustomSimpleInput
-                  required
-                  name="address.city"
-                  label={t('LABEL_CITY')}
-                  contentEditable={false}
-                  value={zipCodeInfos?.city || ''}
-                />
-                {zipCodeInfos?.zipCode && !zipCodeInfos?.publicArea ? (
+                <PersonalDataFirst>
                   <CustomInput
-                    required
-                    name="address.publicArea"
-                    label={t('LABEL_PUBLIC_AREA')}
                     rules={{
                       required: {
                         value: true,
-                        message: t('ERROR_PUBLIC_AREA_REQUIRED'),
+                        message: t('ERROR_NAME_REQUIRED'),
                       },
-                      validate: (value) =>
-                        (zipCodeInfos?.zipCode && value !== '') ||
-                        t('ERROR_PUBLIC_AREA_REQUIRED'),
                     }}
-                  />
-                ) : (
-                  <CustomSimpleInput
+                    name="name"
+                    label={t('LABEL_NAME')}
                     required
-                    name="address.publicArea"
-                    label={t('LABEL_PUBLIC_AREA')}
-                    contentEditable={false}
-                    value={zipCodeInfos?.publicArea}
                   />
-                )}
-              </AuxDataFirst>
-              <AuxDataSecond>
-                <CustomSimpleInput
-                  required
-                  name="address.state"
-                  label={t('LABEL_STATE')}
-                  contentEditable={false}
-                  value={zipCodeInfos?.state}
-                />
-                {zipCodeInfos?.zipCode && !zipCodeInfos?.district ? (
                   <CustomInput
                     required
-                    name="address.district"
-                    label={t('LABEL_DISTRICT')}
-                    contentEditable={false}
+                    name="email"
+                    label={t('LABEL_EMAIL')}
                     rules={{
                       required: {
                         value: true,
-                        message: t('ERROR_DISTRICT_REQUIRED'),
+                        message: t('ERROR_EMAIL_REQUIRED'),
                       },
-                      validate: (value) =>
-                        (zipCodeInfos?.zipCode && value !== '') ||
-                        t('ERROR_DISTRICT_REQUIRED'),
                     }}
-                    value={zipCodeInfos?.district}
                   />
-                ) : (
+                </PersonalDataFirst>
+
+                <PersonalDataSecond>
+                  <CustomDatePicker
+                    name="birthDate"
+                    required
+                    rules={{
+                      required: {
+                        value: true,
+                        message: t('ERROR_BIRTH_DATE_REQUIRED'),
+                      },
+                      validate: (date) => {
+                        if (!isValid(date))
+                          return t('ERROR_BIRTH_DATE_INVALID');
+
+                        date.setHours(0, 0, 0, 0);
+                        const currenDate = new Date();
+                        currenDate.setHours(0, 0, 0, 0);
+
+                        return (
+                          (!isAfter(date, currenDate) &&
+                            !isEqual(date, currenDate)) ||
+                          t('ERROR_BIRTH_DATE_FUTURE')
+                        );
+                      },
+                    }}
+                    label={t('LABEL_BIRTH_DATE')}
+                    defaultValue={new Date()}
+                  />
+                </PersonalDataSecond>
+
+                <SectionDivider>{t('LABEL_ADDRESS_DATA')}</SectionDivider>
+                <AuxDataFirst>
+                  <AsyncInput
+                    required
+                    name="address.zipCode"
+                    label={t('LABEL_ZIP_CODE')}
+                    onCompleteZipCode={handleZipCodeComplete}
+                    inputLoading={inputLoading}
+                    defaultValue={''}
+                    maxLength={9}
+                    mask={(s: string): string =>
+                      `${s
+                        .replace(/\D/g, '')
+                        .replace(/(\d{5})(\d)/, '$1-$2')
+                        .replace(/(-\d{3})\d+?$/, '$1')}`
+                    }
+                  />
                   <CustomSimpleInput
                     required
-                    name="address.district"
-                    label={t('LABEL_DISTRICT')}
+                    name="address.city"
+                    label={t('LABEL_CITY')}
                     contentEditable={false}
-                    value={zipCodeInfos?.district}
+                    value={zipCodeInfos?.city || ''}
                   />
-                )}
-                <CustomInput
-                  name="address.complement"
-                  label={t('LABEL_COMPLEMENT')}
-                />
-              </AuxDataSecond>
-            </StyledForm>
-          </FormProvider>
-        </div>
+                  {zipCodeInfos?.zipCode && !zipCodeInfos?.publicArea ? (
+                    <CustomInput
+                      required
+                      name="address.publicArea"
+                      label={t('LABEL_PUBLIC_AREA')}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: t('ERROR_PUBLIC_AREA_REQUIRED'),
+                        },
+                        validate: (value) =>
+                          (zipCodeInfos?.zipCode && value !== '') ||
+                          t('ERROR_PUBLIC_AREA_REQUIRED'),
+                      }}
+                    />
+                  ) : (
+                    <CustomSimpleInput
+                      required
+                      name="address.publicArea"
+                      label={t('LABEL_PUBLIC_AREA')}
+                      contentEditable={false}
+                      value={zipCodeInfos?.publicArea}
+                    />
+                  )}
+                </AuxDataFirst>
+                <AuxDataSecond>
+                  <CustomSimpleInput
+                    required
+                    name="address.state"
+                    label={t('LABEL_STATE')}
+                    contentEditable={false}
+                    value={zipCodeInfos?.state}
+                  />
+                  {zipCodeInfos?.zipCode && !zipCodeInfos?.district ? (
+                    <CustomInput
+                      required
+                      name="address.district"
+                      label={t('LABEL_DISTRICT')}
+                      contentEditable={false}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: t('ERROR_DISTRICT_REQUIRED'),
+                        },
+                        validate: (value) =>
+                          (zipCodeInfos?.zipCode && value !== '') ||
+                          t('ERROR_DISTRICT_REQUIRED'),
+                      }}
+                      value={zipCodeInfos?.district}
+                    />
+                  ) : (
+                    <CustomSimpleInput
+                      required
+                      name="address.district"
+                      label={t('LABEL_DISTRICT')}
+                      contentEditable={false}
+                      value={zipCodeInfos?.district}
+                    />
+                  )}
+                  <CustomInput
+                    name="address.complement"
+                    label={t('LABEL_COMPLEMENT')}
+                  />
+                </AuxDataSecond>
+              </StyledForm>
+            </FormProvider>
+          </div>
 
-        <ButtonsContainer>
-          <RequiredFieldsHelp>{t('TEXT_REQUIRED_FIELDS')}</RequiredFieldsHelp>
-          <StyledButton
-            type="submit"
-            form="form"
-            style={{ gridColumnStart: 2 }}
-            disabled={loading}
-          >
-            {loading ? (
-              <CircularProgress size={20} style={{ color: '#FFF' }} />
-            ) : (
-              t('BUTTON_SAVE')
-            )}
-          </StyledButton>
-          <StyledButtonInverted
-            disabled={loading}
-            onClick={() => navigate('/patients', { replace: true })}
-            style={{ gridColumnStart: 3 }}
-          >
-            {t('BUTTON_CANCEL')}
-          </StyledButtonInverted>
-        </ButtonsContainer>
-      </CustomBox>
+          <ButtonsContainer>
+            <RequiredFieldsHelp>{t('TEXT_REQUIRED_FIELDS')}</RequiredFieldsHelp>
+            <StyledButton
+              type="submit"
+              form="form"
+              style={{ gridColumnStart: 2 }}
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress size={20} style={{ color: '#FFF' }} />
+              ) : (
+                t('BUTTON_SAVE')
+              )}
+            </StyledButton>
+            <StyledButtonInverted
+              disabled={loading}
+              onClick={() => navigate('/patients', { replace: true })}
+              style={{ gridColumnStart: 3 }}
+            >
+              {t('BUTTON_CANCEL')}
+            </StyledButtonInverted>
+          </ButtonsContainer>
+        </CustomBox>
+      )}
     </Container>
   );
 };
