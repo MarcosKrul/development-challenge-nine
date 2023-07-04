@@ -22,11 +22,16 @@ const LanguageSelector = () => {
     <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
       <InputLabel
         id="language-selector-label-id"
-        style={{ color: colors.TEXT }}
+        style={{ color: colors.WHITE }}
       >
         {t('LABEL_LANGUAGE')}
       </InputLabel>
       <StyledSelect
+        sx={{
+          '.MuiSvgIcon-root ': {
+            fill: colors.WHITE,
+          },
+        }}
         labelId="language-selector-label-id"
         id="language-selector-id"
         value={language}

@@ -5,4 +5,5 @@ export default {
   DANGER: '#AD2626',
   WARNING: '#D86F51',
   GREY: '#EEEEEE',
+  WHITE: '#FFF',
 };

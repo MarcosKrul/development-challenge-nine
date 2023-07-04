@@ -107,6 +107,8 @@ const PatientPersistence = () => {
       customToast({
         text: t(message),
       });
+      setLoading(false);
+      navigate('/patients');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       customAlert({

@@ -1,7 +1,7 @@
 import './customStyles.css';
 import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
-export type AlertProps = {
+type AlertProps = {
   icon?: SweetAlertIcon;
   text: string;
 } & SweetAlertOptions;
@@ -9,7 +9,7 @@ export type AlertProps = {
 const customToast = ({ text, icon, ...rest }: AlertProps) => {
   const Toast = Swal.mixin({
     toast: true,
-    position: 'bottom-left',
+    position: 'bottom-right',
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,
@@ -23,7 +23,7 @@ const customToast = ({ text, icon, ...rest }: AlertProps) => {
     },
   });
 
-  return Toast.fire({
+  Toast.fire({
     icon: icon || 'success',
     title: text,
     ...rest,

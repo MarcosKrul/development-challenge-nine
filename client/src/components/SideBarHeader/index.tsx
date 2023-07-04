@@ -2,8 +2,7 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useTheme } from '@mui/material/styles';
+import colors from '@global/colors';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -18,12 +17,10 @@ interface ISideBarHeaderProps {
 }
 
 const SideBarHeader = ({ handleDrawerClose }: ISideBarHeaderProps) => {
-  const theme = useTheme();
-
   return (
     <DrawerHeader>
       <IconButton onClick={handleDrawerClose}>
-        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        <ChevronLeftIcon style={{ color: colors.WHITE }} />
       </IconButton>
     </DrawerHeader>
   );

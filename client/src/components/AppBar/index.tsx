@@ -2,13 +2,13 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import constants from '@global/constants';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import { LanguageSelector } from '@components/LanguageSelector';
 import { useTranslation } from 'react-i18next';
-import { Container } from './styles';
+import { Container, CustomText } from './styles';
+import colors from '@global/colors';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -53,12 +53,10 @@ const AppBar = ({ handleDrawerOpen, open }: IAppBarProps) => {
             ...(open && { display: 'none' }),
           }}
         >
-          <MenuIcon />
+          <MenuIcon style={{ color: colors.WHITE }} />
         </IconButton>
         <Container>
-          <Typography variant="h6" component="div">
-            {t('LABEL_HEADER')}
-          </Typography>
+          <CustomText variant="h6">{t('LABEL_HEADER')}</CustomText>
           <LanguageSelector />
         </Container>
       </Toolbar>

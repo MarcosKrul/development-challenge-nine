@@ -5,6 +5,7 @@ import {
   BoxHeader,
   ButtonsContainer,
   Container,
+  CustomBox,
   InputsForm,
   NoRowsContainer,
   NoRowsText,
@@ -108,60 +109,62 @@ const PatientControl = () => {
 
   return (
     <Container>
-      <BoxHeader>
-        <TitleAndInputs>
-          <PageTitle>{t('TITLE_PATIENTS_CONTROL')}</PageTitle>
-          <FormProvider {...formMethods}>
-            <InputsForm id="search" onSubmit={handleSubmit(onSubmit)}>
-              <CustomInput
-                name="search_filter_name"
-                label={t('LABEL_NAME')}
-                size="medium"
-                endFunction="clear"
-              />
-              <CustomInput
-                name="search_filter_email"
-                label={t('LABEL_EMAIL')}
-                size="medium"
-                endFunction="clear"
-              />
-            </InputsForm>
-          </FormProvider>
-        </TitleAndInputs>
-        <ButtonsContainer>
-          <StyledButton
-            disabled={loading}
-            onClick={() => navigate('/patients/save')}
-          >
-            {t('BUTTON_ADD')}
-          </StyledButton>
-          <StyledButton disabled={loading} form="search" type="submit">
-            {t('BUTTON_SEARCH')}
-          </StyledButton>
-        </ButtonsContainer>
-      </BoxHeader>
+      <CustomBox>
+        <BoxHeader>
+          <TitleAndInputs>
+            <PageTitle>{t('TITLE_PATIENTS_CONTROL')}</PageTitle>
+            <FormProvider {...formMethods}>
+              <InputsForm id="search" onSubmit={handleSubmit(onSubmit)}>
+                <CustomInput
+                  name="search_filter_name"
+                  label={t('LABEL_NAME')}
+                  size="medium"
+                  endFunction="clear"
+                />
+                <CustomInput
+                  name="search_filter_email"
+                  label={t('LABEL_EMAIL')}
+                  size="medium"
+                  endFunction="clear"
+                />
+              </InputsForm>
+            </FormProvider>
+          </TitleAndInputs>
+          <ButtonsContainer>
+            <StyledButton
+              disabled={loading}
+              onClick={() => navigate('/patients/save')}
+            >
+              {t('BUTTON_ADD')}
+            </StyledButton>
+            <StyledButton disabled={loading} form="search" type="submit">
+              {t('BUTTON_SEARCH')}
+            </StyledButton>
+          </ButtonsContainer>
+        </BoxHeader>
 
-      {count > 0 ? (
-        <PatientsTable
-          rows={patients}
-          editFn={handleEdit}
-          deleteFn={confirmDeletePopUp}
+        {count > 0 ? (
+          <PatientsTable
+            rows={patients}
+            editFn={handleEdit}
+            deleteFn={confirmDeletePopUp}
+          />
+        ) : (
+          <NoRowsContainer>
+            <NoRowsText>{t('TEXT_PATIENT_EMPTY_LIST')}</NoRowsText>
+          </NoRowsContainer>
+        )}
+
+        <TablePagination
+          sx={{ overflow: 'hidden', minHeight: 60 }}
+          rowsPerPageOptions={[]}
+          component="div"
+          count={count}
+          rowsPerPage={constants.PAGE_SIZE}
+          page={page}
+          onPageChange={(e, page) => setPage(page)}
         />
-      ) : (
-        <NoRowsContainer>
-          <NoRowsText>{t('TEXT_PATIENT_EMPTY_LIST')}</NoRowsText>
-        </NoRowsContainer>
-      )}
-
-      <TablePagination
-        sx={{ overflow: 'hidden', minHeight: 60 }}
-        rowsPerPageOptions={[]}
-        component="div"
-        count={count}
-        rowsPerPage={constants.PAGE_SIZE}
-        page={page}
-        onPageChange={(e, page) => setPage(page)}
-      />
+      </CustomBox>
     </Container>
   );
 };

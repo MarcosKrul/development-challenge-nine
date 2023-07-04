@@ -7,12 +7,13 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { SideBarHeader } from '@components/SideBarHeader';
 import { routes } from '@global/routes';
 import { NavItem } from './styles';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { ListItemText, Typography } from '@mui/material';
+import colors from '@global/colors';
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: constants.SIDE_BAR_WIDTH,
@@ -89,14 +90,18 @@ const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
                     minWidth: 0,
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
+                    color: colors.WHITE,
                   }}
                 >
                   {icon()}
                 </ListItemIcon>
-                <ListItemText
-                  primary={t(labelKey)}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
+                <ListItemText>
+                  {open ? (
+                    <Typography style={{ color: colors.WHITE }}>
+                      {t(labelKey)}
+                    </Typography>
+                  ) : null}
+                </ListItemText>
               </ListItemButton>
             </ListItem>
           </NavItem>
