@@ -3,6 +3,15 @@ type SavePatientResponseModel = {
   name: string;
   email: string;
   birthDate: string;
+  age: number;
+  createdAt: {
+    date: string;
+    readableDate: string;
+  };
+  updatedAt: {
+    date: string;
+    readableDate: string;
+  };
   address: {
     city: string;
     district: string;

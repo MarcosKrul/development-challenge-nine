@@ -7,6 +7,7 @@ import { transaction } from "@database/transaction";
 import { SavePatientRequestModel } from "@dtos/patient/SavePatientRequestModel";
 import { SavePatientResponseModel } from "@dtos/patient/SavePatientResponseModel";
 import { AppError } from "@handlers/error/AppError";
+import { capitalize } from "@helpers/capitalize";
 import { stringIsNullOrEmpty } from "@helpers/stringIsNullOrEmpty";
 import {
   getMessage,
@@ -198,6 +199,22 @@ class SavePatientService<
       email: patientSaved.email,
       name: patientSaved.name,
       birthDate: this.maskProvider.date(patientSaved.birthDate),
+      age: this.dateProvider.differenceInYears(
+        this.dateProvider.now(),
+        patientSaved.birthDate
+      ),
+      createdAt: {
+        readableDate: capitalize(
+          this.dateProvider.readableDate(patientSaved.createdAt)
+        ),
+        date: this.maskProvider.timestamp(patientSaved.createdAt),
+      },
+      updatedAt: {
+        readableDate: capitalize(
+          this.dateProvider.readableDate(patientSaved.updatedAt)
+        ),
+        date: this.maskProvider.timestamp(patientSaved.updatedAt),
+      },
       address: {
         city: addressSaved.city,
         complement: addressSaved.complement || undefined,
