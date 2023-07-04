@@ -5,9 +5,10 @@ import { Outlet } from 'react-router-dom';
 import { AppBar } from '@components/AppBar';
 import { SideBar } from '@components/SideBar';
 import colors from '@global/colors';
+import constants from '@global/constants';
 
 const Main = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(constants.SIDEBAR_INITIALIZE_OPENED);
 
   const handleDrawerOpen = () => {
     setOpen(true);
