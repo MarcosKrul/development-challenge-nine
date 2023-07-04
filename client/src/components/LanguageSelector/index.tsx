@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -11,6 +11,11 @@ import colors from '@global/colors';
 const LanguageSelector = () => {
   const { i18n, t } = useTranslation();
   const [language, setLanguage] = useState('pt-br');
+
+  useEffect(() => {
+    const language = localStorage.getItem(constants.LOCALSTORAGE_LANGUAGE);
+    if (language) setLanguage(language);
+  });
 
   const handleChange = (value: string) => {
     setLanguage(value);
