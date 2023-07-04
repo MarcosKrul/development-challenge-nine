@@ -3,16 +3,23 @@ import { CreatePatientRequestBodyModel } from './models/CreatePatientRequestBody
 import { ApiResponseModel } from '@models/ApiResponseModel';
 import { CreatePatientApiResponseModel } from './models/CreatePatientApiResponseModel';
 import { api } from '@services/api';
-import constants from '@global/constants';
 import { useTranslation } from 'react-i18next';
 import { GetPatientByIdApiResponseModel } from './models/GetPatientByIdApiResponseModel';
 import { ListPatientsApiResponseModel } from './models/ListPatientsApiResponseModel';
 import { ListPatientsRequestParamsModel } from './models/ListPatientsRequestParamsModel';
 import { PaginatedResponseModel } from '@models/PaginatedResponseModel';
+import { useQuery } from 'react-query';
+import { getLangHttpQuery } from '@helpers/getLangHttpQuery';
+import constants from '@global/constants';
+import { customAlert } from '@helpers/customAlert';
+import { getPatientListCacheKey } from './helpers/getPatientListCacheKey';
 
 interface PatientsContextData {
   patients: ListPatientsApiResponseModel[];
   count: number;
+  filters: ListPatientsRequestParamsModel;
+  fetchingPatients: boolean;
+  errorAtPatientsFetching: boolean;
 
   create: (
     data: CreatePatientRequestBodyModel
@@ -25,7 +32,7 @@ interface PatientsContextData {
   getById: (
     id: string
   ) => Promise<ApiResponseModel<GetPatientByIdApiResponseModel>>;
-  getPatients(data: ListPatientsRequestParamsModel): Promise<void>;
+  setSearchPatientsFilters(data: ListPatientsRequestParamsModel): void;
 }
 
 interface PatientProviderProps {
@@ -39,8 +46,55 @@ const PatientsContext = createContext<PatientsContextData>(
 const PatientProvider: React.FC<PatientProviderProps> = ({
   children,
 }: PatientProviderProps) => {
-  const [patients, setPatients] = useState<ListPatientsApiResponseModel[]>([]);
+  const { t } = useTranslation();
   const [count, setCount] = useState<number>(0);
+  const [filters, setFilters] = useState<ListPatientsRequestParamsModel>({
+    page: 0,
+    search: undefined,
+  });
+
+  const {
+    data: patients,
+    isFetching,
+    error: errorAtPatientsFetching,
+  } = useQuery<ListPatientsApiResponseModel[]>(
+    getPatientListCacheKey(filters),
+    async () => {
+      try {
+        const {
+          data: response,
+        }: {
+          data: ApiResponseModel<
+            PaginatedResponseModel<ListPatientsApiResponseModel>
+          >;
+        } = await api.post(
+          `/patient/search?page=${filters.page}&size=${
+            constants.PAGE_SIZE
+          }&${getLangHttpQuery()}`,
+          {
+            name: filters.search?.name || '',
+            email: filters.search?.email || '',
+          }
+        );
+        setCount(response.content?.totalItems || 0);
+        return response.content?.items || [];
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        customAlert({
+          title: t('ERROR_GENERIC_TITLE'),
+          text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
+          icon: 'error',
+        });
+
+        return [];
+      }
+    },
+    {
+      refetchOnWindowFocus: true,
+      staleTime: constants.MILLIS_TO_SWR_PATIENTS_DATA,
+    }
+  );
 
   const create = async (
     data: CreatePatientRequestBodyModel
@@ -48,14 +102,9 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     const {
       data: response,
     }: { data: ApiResponseModel<CreatePatientApiResponseModel> } =
-      await api.post(
-        `/patient?lang=${localStorage.getItem(
-          constants.LOCALSTORAGE_LANGUAGE
-        )}`,
-        {
-          ...data,
-        }
-      );
+      await api.post(`/patient?${getLangHttpQuery()}`, {
+        ...data,
+      });
 
     return response;
   };
@@ -67,25 +116,16 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     const {
       data: response,
     }: { data: ApiResponseModel<CreatePatientApiResponseModel> } =
-      await api.put(
-        `/patient/${id}?lang=${localStorage.getItem(
-          constants.LOCALSTORAGE_LANGUAGE
-        )}`,
-        {
-          ...data,
-        }
-      );
+      await api.put(`/patient/${id}?${getLangHttpQuery()}`, {
+        ...data,
+      });
 
     return response;
   };
 
   const remove = async (id: string): Promise<ApiResponseModel<boolean>> => {
     const { data: response }: { data: ApiResponseModel<boolean> } =
-      await api.delete(
-        `/patient/${id}?lang=${localStorage.getItem(
-          constants.LOCALSTORAGE_LANGUAGE
-        )}`
-      );
+      await api.delete(`/patient/${id}?${getLangHttpQuery()}`);
 
     return response;
   };
@@ -96,50 +136,24 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     const {
       data: response,
     }: { data: ApiResponseModel<GetPatientByIdApiResponseModel> } =
-      await api.get(
-        `/patient/${id}?lang=${localStorage.getItem(
-          constants.LOCALSTORAGE_LANGUAGE
-        )}`
-      );
+      await api.get(`/patient/${id}?${getLangHttpQuery()}`);
 
     return response;
-  };
-
-  const getPatients = async ({
-    page,
-    size,
-    filters,
-  }: ListPatientsRequestParamsModel): Promise<void> => {
-    const {
-      data: response,
-    }: {
-      data: ApiResponseModel<
-        PaginatedResponseModel<ListPatientsApiResponseModel>
-      >;
-    } = await api.post(
-      `/patient/search?page=${page}&size=${size}&lang=${localStorage.getItem(
-        constants.LOCALSTORAGE_LANGUAGE
-      )}`,
-      {
-        name: filters?.name || '',
-        email: filters?.email || '',
-      }
-    );
-
-    setPatients(response.content?.items || []);
-    setCount(response.content?.totalItems || 0);
   };
 
   return (
     <PatientsContext.Provider
       value={{
         count,
-        patients,
+        errorAtPatientsFetching: !!errorAtPatientsFetching,
+        fetchingPatients: isFetching,
+        filters,
+        patients: patients || [],
         create,
         update,
         remove,
         getById,
-        getPatients,
+        setSearchPatientsFilters: setFilters,
       }}
     >
       {children}
@@ -156,4 +170,4 @@ const usePatients = (): PatientsContextData => {
   return context;
 };
 
-export { usePatients, PatientProvider };
+export { usePatients, PatientProvider, getPatientListCacheKey };

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   BoxHeader,
@@ -21,50 +20,46 @@ import { PatientsTable } from './PatientsTable';
 import { TablePagination } from '@mui/material';
 import constants from '@global/constants';
 import { useNavigate } from 'react-router-dom';
-import { usePatients } from '@context/Patients';
+import { getPatientListCacheKey, usePatients } from '@context/Patients';
 import { customToast } from '@helpers/customToast';
+import { useQueryClient } from 'react-query';
 
 const PatientControl = () => {
-  const { remove, count, patients, getPatients } = usePatients();
+  const {
+    remove,
+    count,
+    patients,
+    setSearchPatientsFilters,
+    filters,
+    fetchingPatients,
+    errorAtPatientsFetching,
+  } = usePatients();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const formMethods = useForm();
-  const { handleSubmit, setValue } = formMethods;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(0);
+  const queryClient = useQueryClient();
+  const { handleSubmit, setValue, getValues } = formMethods;
 
   useEffect(() => {
-    (async () => {
-      await onSubmit({
-        search_filter_email: '',
-        search_filter_name: '',
-      });
-    })();
-  }, [page]);
+    setValue('search_filter_name', filters.search?.name || '');
+    setValue('search_filter_email', filters.search?.email || '');
 
-  const onSubmit = async (data: FieldValues): Promise<void> => {
-    try {
-      setLoading(true);
-      await getPatients({
-        page,
-        size: constants.PAGE_SIZE,
-        filters: {
-          email: data.search_filter_email,
-          name: data.search_filter_name,
-        },
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      setValue('search_filter_email', '');
+    onSubmit({
+      search_filter_email: filters.search?.email || '',
+      search_filter_name: filters.search?.name || '',
+    });
+  }, [filters.page]);
 
-      customAlert({
-        title: t('ERROR_GENERIC_TITLE'),
-        text: e.response?.data?.message || t('ERROR_GENERIC_API_RESPONSE'),
-        icon: 'error',
-      });
-    } finally {
-      setLoading(false);
-    }
+  const onSubmit = (data: FieldValues): void => {
+    setSearchPatientsFilters({
+      page: filters.page,
+      search: {
+        email: data.search_filter_email || '',
+        name: data.search_filter_name || '',
+      },
+    });
+
+    if (errorAtPatientsFetching) setValue('search_filter_name', '');
   };
 
   const confirmDeletePopUp = (id: string): void => {
@@ -93,6 +88,7 @@ const PatientControl = () => {
       customToast({
         text: t(message),
       });
+      await queryClient.invalidateQueries([getPatientListCacheKey(filters)]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       customAlert({
@@ -104,7 +100,20 @@ const PatientControl = () => {
   };
 
   const handleEdit = (id: string): void => {
-    navigate('/patients/save', { state: { id } });
+    const values = getValues();
+
+    navigate('/patients/save', {
+      state: {
+        id,
+        listPageParameters: {
+          page: filters.page,
+          search: {
+            name: values.search_filter_name || '',
+            email: values.search_filter_email || '',
+          },
+        },
+      },
+    });
   };
 
   return (
@@ -132,12 +141,16 @@ const PatientControl = () => {
           </TitleAndInputs>
           <ButtonsContainer>
             <StyledButton
-              disabled={loading}
+              disabled={fetchingPatients}
               onClick={() => navigate('/patients/save')}
             >
               {t('BUTTON_ADD')}
             </StyledButton>
-            <StyledButton disabled={loading} form="search" type="submit">
+            <StyledButton
+              disabled={fetchingPatients}
+              form="search"
+              type="submit"
+            >
               {t('BUTTON_SEARCH')}
             </StyledButton>
           </ButtonsContainer>
@@ -155,15 +168,27 @@ const PatientControl = () => {
           </NoRowsContainer>
         )}
 
-        <TablePagination
-          sx={{ overflow: 'hidden', minHeight: 60 }}
-          rowsPerPageOptions={[]}
-          component="div"
-          count={count}
-          rowsPerPage={constants.PAGE_SIZE}
-          page={page}
-          onPageChange={(e, page) => setPage(page)}
-        />
+        {count > 0 ? (
+          <TablePagination
+            sx={{ overflow: 'hidden', minHeight: 60 }}
+            rowsPerPageOptions={[]}
+            component="div"
+            count={count}
+            rowsPerPage={constants.PAGE_SIZE}
+            page={filters.page}
+            onPageChange={(e, page) => {
+              const values = getValues();
+
+              setSearchPatientsFilters({
+                page,
+                search: {
+                  email: values.search_filter_email,
+                  name: values.search_filter_name,
+                },
+              });
+            }}
+          />
+        ) : null}
       </CustomBox>
     </Container>
   );

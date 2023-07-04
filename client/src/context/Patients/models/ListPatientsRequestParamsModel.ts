@@ -1,9 +1,8 @@
 type ListPatientsRequestParamsModel = {
   page: number;
-  size: number;
-  filters?: {
-    name?: string;
-    email?: string;
+  search?: {
+    name: string;
+    email: string;
   };
 };
 

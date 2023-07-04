@@ -29,10 +29,14 @@ import { customAlert } from '@helpers/customAlert';
 import { getZipCodeInfos } from '@services/zipCode';
 import { CustomSimpleInput } from '@components/CustomSimpleInput';
 import { CreatePatientRequestBodyModel } from '@context/Patients/models/CreatePatientRequestBodyModel';
-import { usePatients } from '@context/Patients';
+import { getPatientListCacheKey, usePatients } from '@context/Patients';
 import { customToast } from '@helpers/customToast';
+import { useQueryClient } from 'react-query';
+import { ListPatientsApiResponseModel } from '@context/Patients/models/ListPatientsApiResponseModel';
+import { ListPatientsRequestParamsModel } from '@context/Patients/models/ListPatientsRequestParamsModel';
 
 const PatientPersistence = () => {
+  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [id, setId] = useState<string | null>(null);
   const location = useLocation();
@@ -46,8 +50,19 @@ const PatientPersistence = () => {
   const [zipCodeInfos, setZipCodeInfos] = useState<ZipCodeResponseModel | null>(
     null
   );
+  const [listPageParameters, setListPageParameters] =
+    useState<ListPatientsRequestParamsModel>({ page: 0 });
 
   useEffect(() => {
+    if (!location.state) return;
+
+    if (location.state.listPageParameters) {
+      setListPageParameters({
+        page: location.state.listPageParameters.page,
+        search: location.state.listPageParameters.search,
+      });
+    }
+
     if (!location.state || !location.state.id) return;
 
     setId(location.state.id);
@@ -103,10 +118,37 @@ const PatientPersistence = () => {
 
     try {
       setLoading(true);
-      const { message } = id ? await update(id, data) : await create(data);
+      const { message, content } = id
+        ? await update(id, data)
+        : await create(data);
       customToast({
         text: t(message),
       });
+
+      if (id) {
+        const previousPage = queryClient.getQueryData<
+          ListPatientsApiResponseModel[]
+        >(getPatientListCacheKey(listPageParameters));
+
+        if (previousPage) {
+          queryClient.setQueryData(
+            getPatientListCacheKey(listPageParameters),
+            previousPage.map(
+              (
+                item: ListPatientsApiResponseModel
+              ): ListPatientsApiResponseModel =>
+                item.id === id
+                  ? ({ ...content } as ListPatientsApiResponseModel)
+                  : item
+            )
+          );
+        }
+      } else {
+        await queryClient.invalidateQueries([
+          getPatientListCacheKey(listPageParameters),
+        ]);
+      }
+
       setLoading(false);
       navigate('/patients');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
