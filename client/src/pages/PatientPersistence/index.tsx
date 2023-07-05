@@ -99,6 +99,8 @@ const PatientPersistence = () => {
       birthDate: new Date(rawData.birthDate).toISOString().split('T')[0],
       address: {
         ...zipCodeInfos,
+        publicArea: zipCodeInfos?.publicArea || rawData.address.publicArea,
+        district: zipCodeInfos?.district || rawData.address.district,
         complement: rawData.address.complement,
       },
     };
