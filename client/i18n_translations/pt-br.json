@@ -42,6 +42,8 @@
   "TOOLTIP_DELETE": "Excluir",
   "TOOLTIP_TO_RECALL": "Recolher",
   "TOOLTIP_HOME": "Início",
+  "TOOLTIP_NEXT": "Avançar para a próxima página",
+  "TOOLTIP_BACK": "Voltar para a página anterior",
   "TOOLTIP_PATIENTS": "Pacientes",
   "TOOLTIP_EXPAND": "Expandir",
   "TITLE_PATIENTS_CONTROL": "Gerenciamento de pacientes",

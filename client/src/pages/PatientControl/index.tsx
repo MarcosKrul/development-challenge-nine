@@ -160,6 +160,8 @@ const PatientControl = () => {
             rowsPerPageOptions={[]}
             component="div"
             count={count}
+            nextIconButtonProps={{ title: t('TOOLTIP_NEXT') }}
+            backIconButtonProps={{ title: t('TOOLTIP_BACK') }}
             rowsPerPage={constants.PAGE_SIZE}
             page={filters.page}
             onPageChange={(e, page) => {

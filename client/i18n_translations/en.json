@@ -42,6 +42,8 @@
   "TOOLTIP_DELETE": "Delete",
   "TOOLTIP_TO_RECALL": "Recall",
   "TOOLTIP_HOME": "Home",
+  "TOOLTIP_NEXT": "Next to the next page",
+  "TOOLTIP_BACK": "Go back to the previous page",
   "TOOLTIP_PATIENTS": "Patients",
   "TOOLTIP_EXPAND": "Expand",
   "TITLE_PATIENTS_CONTROL": "Patient Management",
