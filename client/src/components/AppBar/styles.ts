@@ -11,4 +11,5 @@ export const Container = styled('div')({
 
 export const CustomText = styled(Typography)({
   color: colors.WHITE,
+  fontWeight: '300',
 });

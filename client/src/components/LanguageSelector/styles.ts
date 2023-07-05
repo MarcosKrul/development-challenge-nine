@@ -6,14 +6,14 @@ export const StyledSelect = styled(Select<string>)`
   color: ${colors.WHITE};
 
   & .${outlinedInputClasses.notchedOutline} {
-    border-color: ${colors.WHITE};
+    border-color: ${colors.GREY_DARKER};
   }
 
   &:hover .${outlinedInputClasses.notchedOutline} {
-    border-color: ${colors.WHITE};
+    border-color: ${colors.GREY_DARKER};
   }
 
   &.${outlinedInputClasses.focused} .${outlinedInputClasses.notchedOutline} {
-    border-color: ${colors.WHITE} !important;
+    border-color: ${colors.GREY_DARKER} !important;
   }
 `;
