@@ -1,9 +1,8 @@
-import { ReactNode } from 'react';
-
 interface AppRouteModel {
   path: string;
   labelKey: string;
-  icon: () => ReactNode;
+  icon: () => JSX.Element;
+  tooltipKey: string;
 }
 
 export type { AppRouteModel };

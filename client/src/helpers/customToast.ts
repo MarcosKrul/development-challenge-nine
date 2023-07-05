@@ -9,7 +9,7 @@ type AlertProps = {
 const customToast = ({ text, icon, ...rest }: AlertProps) => {
   const Toast = Swal.mixin({
     toast: true,
-    position: 'bottom-right',
+    position: 'bottom-left',
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,

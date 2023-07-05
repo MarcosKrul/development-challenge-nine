@@ -9,6 +9,7 @@ import { LanguageSelector } from '@components/LanguageSelector';
 import { useTranslation } from 'react-i18next';
 import { Container, CustomText } from './styles';
 import colors from '@global/colors';
+import { Tooltip } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -53,7 +54,9 @@ const AppBar = ({ handleDrawerOpen, open }: IAppBarProps) => {
             ...(open && { display: 'none' }),
           }}
         >
-          <MenuIcon style={{ color: colors.WHITE }} />
+          <Tooltip title={t('TOOLTIP_EXPAND')}>
+            <MenuIcon style={{ color: colors.WHITE }} />
+          </Tooltip>
         </IconButton>
         <Container>
           <CustomText variant="h6">{t('LABEL_HEADER')}</CustomText>

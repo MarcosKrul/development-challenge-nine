@@ -12,7 +12,7 @@ import { routes } from '@global/routes';
 import { NavItem } from './styles';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { ListItemText, Typography } from '@mui/material';
+import { ListItemText, Tooltip, Typography } from '@mui/material';
 import colors from '@global/colors';
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -75,7 +75,7 @@ const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
       <SideBarHeader handleDrawerClose={handleDrawerClose} />
       <Divider />
       <List>
-        {routes.map(({ labelKey, path, icon }) => (
+        {routes.map(({ labelKey, path, icon, tooltipKey }) => (
           <NavItem to={path} key={labelKey}>
             <ListItem key={labelKey} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
@@ -93,7 +93,7 @@ const SideBar = ({ open, handleDrawerClose }: ISideBarProps) => {
                     color: colors.WHITE,
                   }}
                 >
-                  {icon()}
+                  <Tooltip title={t(tooltipKey)}>{icon()}</Tooltip>
                 </ListItemIcon>
                 <ListItemText>
                   {open ? (

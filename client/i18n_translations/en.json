@@ -41,6 +41,8 @@
   "TOOLTIP_EDIT": "Edit",
   "TOOLTIP_DELETE": "Delete",
   "TOOLTIP_TO_RECALL": "Recall",
+  "TOOLTIP_HOME": "Home",
+  "TOOLTIP_PATIENTS": "Patients",
   "TOOLTIP_EXPAND": "Expand",
   "TITLE_PATIENTS_CONTROL": "Patient Management",
   "BUTTON_ADD": "ADD",

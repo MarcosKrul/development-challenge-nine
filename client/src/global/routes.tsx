@@ -8,11 +8,13 @@ const routes: AppRouteModel[] = [
     labelKey: 'LABEL_HOME',
     path: '/home/',
     icon: () => <HomeIcon />,
+    tooltipKey: 'TOOLTIP_HOME',
   },
   {
     labelKey: 'LABEL_PATIENTS',
     path: '/patients/',
     icon: () => <PatientIcon />,
+    tooltipKey: 'TOOLTIP_PATIENTS',
   },
 ];
 
