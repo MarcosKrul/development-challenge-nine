@@ -125,7 +125,7 @@ const PatientPersistence = () => {
                 : item
           )
         );
-      else await invalidateCache();
+      else await invalidateCache(false);
 
       setLoading(false);
       navigate('/patients');

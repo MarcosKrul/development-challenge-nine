@@ -21,7 +21,7 @@ interface PatientsContextData {
   fetchingPatients: boolean;
   errorAtPatientsFetching: boolean;
 
-  invalidateCache: () => Promise<void>;
+  invalidateCache: (cleanAll: boolean) => Promise<void>;
   updateCache: (
     getNewListFn: (
       list: ListPatientsApiResponseModel[]
@@ -150,8 +150,10 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     return response;
   };
 
-  const invalidateCache = async (): Promise<void> => {
-    await queryClient.invalidateQueries([getPatientListCacheKey(filters)]);
+  const invalidateCache = async (cleanAll: boolean): Promise<void> => {
+    await queryClient.invalidateQueries(
+      cleanAll ? undefined : [getPatientListCacheKey(filters)]
+    );
   };
 
   const updateCache = (

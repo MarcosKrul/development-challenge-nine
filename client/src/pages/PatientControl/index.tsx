@@ -87,7 +87,7 @@ const PatientControl = () => {
       customToast({
         text: t(message),
       });
-      await invalidateCache();
+      await invalidateCache(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       customAlert({
