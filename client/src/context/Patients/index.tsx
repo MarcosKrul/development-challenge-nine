@@ -87,6 +87,7 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
           icon: 'error',
         });
 
+        setCount(0);
         return [];
       }
     },
