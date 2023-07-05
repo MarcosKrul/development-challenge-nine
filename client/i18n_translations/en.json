@@ -54,5 +54,7 @@
   "TEXT_REQUIRED_FIELDS": "Fields marked with * are required",
   "TEXT_PATIENT_EMPTY_LIST": "No patients found with the provided filters",
   "TEXT_NOT_FOUND_PAGE_TITLE": "Oops! You were not supposed to access this page!",
-  "TEXT_GO_HOME": "Go back to the home page"
+  "TEXT_GO_HOME": "Go back to the home page",
+  "TEXT_HOME_DESCRIPTION": "Application designed for the #09 full-stack development challenge for Medcloud company.",
+  "TEXT_HOME_DEV_BY": "Developed by Marcos Renan Krul <marcoskrul2k@gmail.com>."
 }
