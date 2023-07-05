@@ -8,7 +8,7 @@ import { GetPatientByIdApiResponseModel } from './models/GetPatientByIdApiRespon
 import { ListPatientsApiResponseModel } from './models/ListPatientsApiResponseModel';
 import { ListPatientsRequestParamsModel } from './models/ListPatientsRequestParamsModel';
 import { PaginatedResponseModel } from '@models/PaginatedResponseModel';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getLangHttpQuery } from '@helpers/getLangHttpQuery';
 import constants from '@global/constants';
 import { customAlert } from '@helpers/customAlert';
@@ -20,6 +20,13 @@ interface PatientsContextData {
   filters: ListPatientsRequestParamsModel;
   fetchingPatients: boolean;
   errorAtPatientsFetching: boolean;
+
+  invalidateCache: () => Promise<void>;
+  updateCache: (
+    getNewListFn: (
+      list: ListPatientsApiResponseModel[]
+    ) => ListPatientsApiResponseModel[]
+  ) => void;
 
   create: (
     data: CreatePatientRequestBodyModel
@@ -47,6 +54,7 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
   children,
 }: PatientProviderProps) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [count, setCount] = useState<number>(0);
   const [filters, setFilters] = useState<ListPatientsRequestParamsModel>({
     page: 0,
@@ -142,10 +150,33 @@ const PatientProvider: React.FC<PatientProviderProps> = ({
     return response;
   };
 
+  const invalidateCache = async (): Promise<void> => {
+    await queryClient.invalidateQueries([getPatientListCacheKey(filters)]);
+  };
+
+  const updateCache = (
+    getNewListFn: (
+      list: ListPatientsApiResponseModel[]
+    ) => ListPatientsApiResponseModel[]
+  ): void => {
+    const previousPage = queryClient.getQueryData<
+      ListPatientsApiResponseModel[]
+    >(getPatientListCacheKey(filters));
+
+    if (!previousPage) return;
+
+    queryClient.setQueryData(
+      getPatientListCacheKey(filters),
+      getNewListFn(previousPage)
+    );
+  };
+
   return (
     <PatientsContext.Provider
       value={{
         count,
+        invalidateCache,
+        updateCache,
         errorAtPatientsFetching: !!errorAtPatientsFetching,
         fetchingPatients: isFetching,
         filters,

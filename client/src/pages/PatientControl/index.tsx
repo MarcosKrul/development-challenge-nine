@@ -20,9 +20,8 @@ import { PatientsTable } from './PatientsTable';
 import { TablePagination } from '@mui/material';
 import constants from '@global/constants';
 import { useNavigate } from 'react-router-dom';
-import { getPatientListCacheKey, usePatients } from '@context/Patients';
+import { usePatients } from '@context/Patients';
 import { customToast } from '@helpers/customToast';
-import { useQueryClient } from 'react-query';
 
 const PatientControl = () => {
   const {
@@ -33,11 +32,11 @@ const PatientControl = () => {
     filters,
     fetchingPatients,
     errorAtPatientsFetching,
+    invalidateCache,
   } = usePatients();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const formMethods = useForm();
-  const queryClient = useQueryClient();
   const { handleSubmit, setValue, getValues } = formMethods;
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const PatientControl = () => {
       customToast({
         text: t(message),
       });
-      await queryClient.invalidateQueries([getPatientListCacheKey(filters)]);
+      await invalidateCache();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       customAlert({
@@ -100,20 +99,7 @@ const PatientControl = () => {
   };
 
   const handleEdit = (id: string): void => {
-    const values = getValues();
-
-    navigate('/patients/save', {
-      state: {
-        id,
-        listPageParameters: {
-          page: filters.page,
-          search: {
-            name: values.search_filter_name || '',
-            email: values.search_filter_email || '',
-          },
-        },
-      },
-    });
+    navigate('/patients/save', { state: { id } });
   };
 
   return (
